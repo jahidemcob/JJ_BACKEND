@@ -1,0 +1,26 @@
+# -- Carpeta de Visual Studio (NO se debe subir)
+.vs/
+
+# -- Compilados de .NET (binarios, temporales)
+bin/
+obj/
+
+# -- Configuración específica del usuario en .NET
+*.user
+*.suo
+
+# -- Archivos generados automáticamente por VSCode
+.vscode/
+
+# -- Archivos de logs locales
+*.log
+
+# -- Archivos de publicación
+publish/
+out/
+
+# -- Configuración local de certificados (si aparece)
+*.pfx
+
+# -- Archivos temporales del sistema
+Thumbs.db
