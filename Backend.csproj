@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.25" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="src\app\auth\API\" />
     <Folder Include="src\app\modules\" />
-    <Folder Include="src\app\auth\" />
     <Folder Include="src\app\shared\" />
   </ItemGroup>
 
