@@ -32,7 +32,7 @@ namespace Auth.Application.UseCases
                 return null;
 
             // 2. Validar contraseña
-            if (!_passwordService.VerifyPassword(request.Clave, usuario.Clave))
+            if (!_passwordService.VerifyPassword(request.Clave, usuario.ClaveHash, usuario.ClaveSalt))
                 return null;
 
             // 3. Obtener el rol del usuario
