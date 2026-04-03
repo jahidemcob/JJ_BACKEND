@@ -7,6 +7,5 @@
         public string Clave { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
         public string Correo { get; set; } = string.Empty;
-        public int IdRol { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace Auth.Application.UseCases
                 NombreUsuario = request.NombreUsuario,
                 Telefono = request.Telefono,
                 Correo = request.Correo,
-                IdRol = request.IdRol,
+                IdRol = 3,
                 ClaveHash = hash,
                 ClaveSalt = salt
             };

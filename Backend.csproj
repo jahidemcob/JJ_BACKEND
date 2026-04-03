@@ -7,14 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.25" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.25" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <Compile Remove="src\app\modules\**" />
+    <Compile Remove="src\app\shared\**" />
+    <Content Remove="src\app\modules\**" />
+    <Content Remove="src\app\shared\**" />
+    <EmbeddedResource Remove="src\app\modules\**" />
+    <EmbeddedResource Remove="src\app\shared\**" />
+    <None Remove="src\app\modules\**" />
+    <None Remove="src\app\shared\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\app\modules\" />
-    <Folder Include="src\app\shared\" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.25" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.25" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.25" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
 </Project>
