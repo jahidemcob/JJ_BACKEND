@@ -9,6 +9,16 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;                                    
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 // Servicios Básicos
 builder.Services.AddControllers();
@@ -63,6 +73,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowAngular");
 
 app.UseAuthentication();
 app.UseAuthorization();
