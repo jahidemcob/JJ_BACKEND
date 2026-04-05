@@ -1,4 +1,4 @@
-﻿namespace Auth.Application.Services
+﻿namespace Backend.src.app.Shared.Security
 {
     public class PasswordService
     {

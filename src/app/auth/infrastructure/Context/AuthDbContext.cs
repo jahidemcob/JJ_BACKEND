@@ -7,8 +7,6 @@ namespace Auth.Infrastructure.Context
     {
         public AuthDbContext(DbContextOptions<AuthDbContext> options)
             : base(options) { }
-
-        public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
     }
 }

@@ -1,27 +1,42 @@
-﻿using Auth.Domain.Entities;
-using Auth.Domain.Repositories;
-using Auth.Infrastructure.Context;
+﻿using Backend.src.app.Features.Users.domain.Entities;
+using Backend.src.app.Features.Users.domain.repositories;
+using Backend.src.app.Features.Users.infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Infrastructure.Repositories
+namespace Backend.src.app.Features.Users.infrastructure.Repositories
 {
     public class UserManagementRepository : IUserManagementRepository
     {
-        private readonly AuthDbContext _context;
+        private readonly UsersDbContext _context;
 
-        public UserManagementRepository(AuthDbContext context)
+        public UserManagementRepository(UsersDbContext context)
         {
             _context = context;
         }
 
         public async Task<IEnumerable<Usuario>> GetAllAsync()
         {
-            return await _context.Usuarios.ToListAsync();
+            return await _context.Usuarios
+                .Where(u => u.Activo) // Solo usuarios activos
+                .ToListAsync();
         }
 
         public async Task<Usuario?> GetByIdAsync(int id)
         {
-            return await _context.Usuarios.FindAsync(id);
+            return await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.IdUsuario == id);
+        }
+
+        public async Task<Usuario?> GetByUsernameAsync(string nombreUsuario)
+        {
+            return await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.NombreUsuario == nombreUsuario);
+        }
+
+        public async Task<Usuario?> GetByEmailAsync(string correo)
+        {
+            return await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Correo == correo);
         }
 
         public async Task CreateAsync(Usuario usuario)
@@ -38,7 +53,8 @@ namespace Auth.Infrastructure.Repositories
 
         public async Task DeleteAsync(Usuario usuario)
         {
-            _context.Usuarios.Remove(usuario);
+            usuario.Activo = false; // Soft delete
+            _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
         }
     }

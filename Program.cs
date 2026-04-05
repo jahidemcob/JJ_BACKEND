@@ -1,12 +1,16 @@
-using Auth.Application.Services;
 using Auth.Application.UseCases;
 using Auth.Domain.Repositories;
 using Auth.Infrastructure.Context;
 using Auth.Infrastructure.Repositories;
+using Backend.src.app.auth.application.Services;
+using Backend.src.app.Features.Users.domain.repositories;
+using Backend.src.app.Features.Users.infrastructure.Context;
+using Backend.src.app.Features.Users.infrastructure.Repositories;
+using Backend.src.app.Shared.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;   
-using Microsoft.IdentityModel.Tokens;                 
-using System.Text;                                    
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -27,11 +31,15 @@ builder.Services.AddSwaggerGen();
 
 // Config BD
 builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AuthConnection"))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
 );
 
+builder.Services.AddDbContext<UsersDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
+);  
+
 // Repositorios
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 
 // Servicios de Dominio

@@ -8,13 +8,9 @@
 
   <ItemGroup>
     <Compile Remove="src\app\modules\**" />
-    <Compile Remove="src\app\shared\**" />
     <Content Remove="src\app\modules\**" />
-    <Content Remove="src\app\shared\**" />
     <EmbeddedResource Remove="src\app\modules\**" />
-    <EmbeddedResource Remove="src\app\shared\**" />
     <None Remove="src\app\modules\**" />
-    <None Remove="src\app\shared\**" />
   </ItemGroup>
 
   <ItemGroup>

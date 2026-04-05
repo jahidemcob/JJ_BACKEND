@@ -1,44 +1,55 @@
 ﻿using Auth.Application.DTOs;
-using Auth.Application.Services;
-using Auth.Domain.Entities;
-using Auth.Domain.Repositories;
+using Backend.src.app.Shared.Constants;
+using Backend.src.app.Shared.Security;  
+using Backend.src.app.Features.Users.domain.repositories;
+using Backend.src.app.Features.Users.domain.Entities;
 
 namespace Auth.Application.UseCases
 {
     public class RegisterUserUseCase
     {
-        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUserManagementRepository _userRepo;
         private readonly PasswordService _passwordService;
 
-        public RegisterUserUseCase(IUsuarioRepository usuarioRepository, PasswordService passwordService)
+        public RegisterUserUseCase(
+            IUserManagementRepository userRepo,
+            PasswordService passwordService)
         {
-            _usuarioRepository = usuarioRepository;
+            _userRepo = userRepo;
             _passwordService = passwordService;
         }
 
         public async Task<Usuario?> RegisterAsync(RegisterRequestDto request)
         {
-            // 1. Verificar si ya existe un usuario con ese username
-            if (await _usuarioRepository.UsuarioExistsAsync(request.NombreUsuario))
+            // 1. Verificar si existe alguien con ese username
+            var existing = await _userRepo.GetByUsernameAsync(request.NombreUsuario);
+            if (existing != null)
                 return null;
 
-            // 2. Generar Hash + Salt
-            _passwordService.CreatePasswordHash(request.Clave, out byte[] hash, out byte[] salt);
+            // (Opcional) Validar correo
+            var existingEmail = await _userRepo.GetByEmailAsync(request.Correo);
+            if (existingEmail != null)
+                return null;
 
-            // 3. Crear el usuario
+            // 2. Crear Hash + Salt
+            _passwordService.CreatePasswordHash(
+                request.Clave, out byte[] hash, out byte[] salt);
+
+            // 3. Crear la entidad usuario
             var usuario = new Usuario
             {
                 Nombre = request.Nombre,
                 NombreUsuario = request.NombreUsuario,
                 Telefono = request.Telefono,
                 Correo = request.Correo,
-                IdRol = 3,
+                IdRol = Roles.Cliente, // !!! No hardcodeado
                 ClaveHash = hash,
-                ClaveSalt = salt
+                ClaveSalt = salt,
+                Activo = true
             };
 
-            // 4. Guardarlo en la BD
-            await _usuarioRepository.CreateAsync(usuario);
+            // 4. Guardar en módulo Users
+            await _userRepo.CreateAsync(usuario);
 
             return usuario;
         }

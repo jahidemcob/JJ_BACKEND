@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Auth.Domain.Entities
+namespace Backend.src.app.Features.Users.domain.Entities
 {
     public class Usuario
     {
@@ -17,5 +17,6 @@ namespace Auth.Domain.Entities
         public string Correo { get; set; } = string.Empty;
         public byte[] ClaveHash { get; set; } = Array.Empty<byte>();
         public byte[] ClaveSalt { get; set; } = Array.Empty<byte>();
+        public bool Activo { get; set; } = true;
     }
 }
