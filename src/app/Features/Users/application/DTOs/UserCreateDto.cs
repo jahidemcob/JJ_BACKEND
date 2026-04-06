@@ -1,4 +1,4 @@
-﻿namespace Users.Application.DTOs
+﻿namespace Backend.src.app.Features.Users.application.DTOs
 {
     public class UserCreateDto
     {

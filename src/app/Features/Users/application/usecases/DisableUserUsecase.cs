@@ -1,29 +1,31 @@
-﻿
+﻿using Backend.src.app.Features.Users.application.DTOs;
 using Backend.src.app.Features.Users.domain.repositories;
 
-namespace Users.Application.UseCases.Users
+namespace Backend.src.app.Features.Users.application.UseCases
 {
-    public class DisableUserUseCase
+    public class DisableUserUsecase
     {
         private readonly IUserManagementRepository _userManagementRepository;
 
-        public DisableUserUseCase(IUserManagementRepository userManagementRepository)
+        public DisableUserUsecase(IUserManagementRepository userManagementRepository)
         {
             _userManagementRepository = userManagementRepository;
         }
 
-        public async Task Execute(int idUsuario)
+        public async Task<bool> Execute(UserDisableDto dto)
         {
-            // Busacar el usuario por su ID
-            var usuario = await _userManagementRepository.GetByIdAsync(idUsuario);
+            // Buscar el usuario
+            var usuario = await _userManagementRepository.GetByIdAsync(dto.IdUsuario);
 
             if (usuario == null)
-                throw new KeyNotFoundException("Usuario no encontrado.");
+                return false;
 
-            // Si existe entonces se desactiva, false = 0
+            // Desactivar usuario
             usuario.Activo = false;
 
             await _userManagementRepository.UpdateAsync(usuario);
+
+            return true;
         }
     }
 }

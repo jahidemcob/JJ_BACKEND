@@ -1,20 +1,46 @@
-﻿using Backend.src.app.Features.Users.domain.Entities;
+﻿using Auth.Domain.Repositories;
+using Backend.src.app.Features.Users.application.DTOs;
 using Backend.src.app.Features.Users.domain.repositories;
 
-namespace Users.Application.UseCases.Users
+namespace Backend.src.app.Features.Users.application.usecases
 {
-    public class UserListUseCase
+    public class UserListUsecase
     {
-        private readonly IUserManagementRepository _repo;
+        private readonly IUserManagementRepository _userManagementRepository;
+        private readonly IRolRepository _rolRepository;
 
-        public UserListUseCase(IUserManagementRepository repo)
+        public UserListUsecase(
+            IUserManagementRepository userManagementRepository,
+            IRolRepository rolRepository)
         {
-            _repo = repo;
+            _userManagementRepository = userManagementRepository;
+            _rolRepository = rolRepository;
         }
 
-        public async Task<IEnumerable<Usuario>> Execute()
+        public async Task<IEnumerable<UserResponseDto>> Execute()
         {
-            return await _repo.GetAllAsync();
+            var usuarios = await _userManagementRepository.GetAllAsync();
+
+            // Convertimos la entidad Usuario → UserResponseDto
+            var lista = new List<UserResponseDto>();
+
+            foreach (var u in usuarios)
+            {
+                var rol = await _rolRepository.GetByIdAsync(u.IdRol);
+
+                lista.Add(new UserResponseDto
+                {
+                    IdUsuario = u.IdUsuario,
+                    Nombre = u.Nombre,
+                    NombreUsuario = u.NombreUsuario,
+                    Telefono = u.Telefono,
+                    Correo = u.Correo,
+                    IdRol = u.IdRol,
+                    Rol = rol?.NombreRol ?? "Sin rol"
+                });
+            }
+
+            return lista;
         }
     }
 }

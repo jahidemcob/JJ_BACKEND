@@ -1,6 +1,73 @@
-﻿namespace Backend.src.app.Features.Users.API.Controllers
+﻿using Backend.src.app.Features.Users.application.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Backend.src.app.Features.Users.application.UseCases;
+using Backend.src.app.Features.Users.application.usecases;
+
+
+namespace Backend.src.app.Features.Users.API.Controllers
 {
-    public class UsersController
+    [ApiController]
+    [Route("users")]
+    public class UsersController : ControllerBase
     {
+        private readonly UserListUsecase _userListUsecase;
+        private readonly CreateUserUsecase _createUserUsecase;
+        private readonly UpdateUserUsecase _updateUserUsecase;
+        private readonly DisableUserUsecase _disableUserUsecase;
+
+        public UsersController(
+            UserListUsecase userListUsecase,
+            CreateUserUsecase createUserUsecase,
+            UpdateUserUsecase updateUserUsecase,
+            DisableUserUsecase disableUserUsecase
+        )
+        {
+            _userListUsecase = userListUsecase;
+            _createUserUsecase = createUserUsecase;
+            _updateUserUsecase = updateUserUsecase;
+            _disableUserUsecase = disableUserUsecase;
+        }
+
+        // GET /users
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var result = await _userListUsecase.Execute();
+            return Ok(result);
+        }
+
+        // POST /users
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
+        {
+            var createdUser = await _createUserUsecase.Execute(dto);
+            return Ok(createdUser);
+        }
+
+        // PUT /users/{id}
+        // PUT /users/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto dto)
+        {
+            dto.IdUsuario = id; // Asignamos el ID de la URL al DTO
+
+            var updatedUser = await _updateUserUsecase.Execute(dto);
+
+            return Ok(updatedUser); // el usecase devuelve UserResponseDto
+        }
+
+        // PATCH /users/{id}/disable
+        [HttpPatch("{id}/disable")]
+        public async Task<IActionResult> DisableUser(int id, [FromBody] UserDisableDto dto)
+        {
+            dto.IdUsuario = id;
+
+            var success = await _disableUserUsecase.Execute(dto);
+
+            if (!success)
+                return NotFound(new { message = "Usuario no encontrado" });
+
+            return NoContent();
+        }
     }
 }

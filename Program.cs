@@ -3,6 +3,8 @@ using Auth.Domain.Repositories;
 using Auth.Infrastructure.Context;
 using Auth.Infrastructure.Repositories;
 using Backend.src.app.auth.application.Services;
+using Backend.src.app.Features.Users.application.usecases;
+using Backend.src.app.Features.Users.application.UseCases;
 using Backend.src.app.Features.Users.domain.repositories;
 using Backend.src.app.Features.Users.infrastructure.Context;
 using Backend.src.app.Features.Users.infrastructure.Repositories;
@@ -46,9 +48,15 @@ builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<TokenService>();
 
-// Casos de Uso
+// Casos de Uso (AUTH)
 builder.Services.AddScoped<LoginUserUseCase>();
 builder.Services.AddScoped<RegisterUserUseCase>();
+
+// Casos de Uso (USERS)  ?? AGREGA ESTO
+builder.Services.AddScoped<UserListUsecase>();
+builder.Services.AddScoped<CreateUserUsecase>();
+builder.Services.AddScoped<UpdateUserUsecase>();
+builder.Services.AddScoped<DisableUserUsecase>();
 
 // JWT ?? CORREGIDO ??
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

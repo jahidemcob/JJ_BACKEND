@@ -1,16 +1,16 @@
 ﻿using Backend.src.app.Features.Users.domain.Entities;
-using Users.Application.DTOs;
+using Backend.src.app.Features.Users.application.DTOs;
 using Backend.src.app.Features.Users.domain.repositories;
 using Backend.src.app.Shared.Security;
 
-namespace Users.Application.UseCases.Users
+namespace Backend.src.app.Features.Users.application.UseCases
 {
-    public class CreateUserUseCase
+    public class CreateUserUsecase
     {
         private readonly IUserManagementRepository _repo;
         private readonly PasswordService _passwordService;
 
-        public CreateUserUseCase(
+        public CreateUserUsecase(
             IUserManagementRepository repo,
             PasswordService passwordService)
         {
