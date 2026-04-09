@@ -8,7 +8,7 @@ namespace Backend.src.app.Features.Users.API.Controllers
 {
     [ApiController]
     [Route("users")]
-    [Authorize(Roles = "Administrador")]
+    //[Authorize(Roles = "Administrador")]
     public class UsersController : ControllerBase
     {
         private readonly UserListUsecase _userListUsecase;

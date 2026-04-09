@@ -62,6 +62,7 @@ builder.Services.AddScoped<RegisterUserUseCase>();
 
 // Casos de uso USERS
 builder.Services.AddScoped<UserListUsecase>();
+builder.Services.AddScoped<GetUserByIdUsecase>();
 builder.Services.AddScoped<CreateUserUsecase>();
 builder.Services.AddScoped<UpdateUserUsecase>();
 builder.Services.AddScoped<DisableUserUsecase>();
