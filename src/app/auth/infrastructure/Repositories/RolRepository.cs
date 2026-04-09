@@ -1,9 +1,9 @@
-﻿using Auth.Domain.Entities;
-using Auth.Domain.Repositories;
+﻿using Backend.src.app.auth.domain.entities;
+using Backend.src.app.auth.domain.repositories;
 using Microsoft.EntityFrameworkCore;
-using Auth.Infrastructure.Context;
+using Backend.src.app.auth.infrastructure.Context;
 
-namespace Auth.Infrastructure.Repositories
+namespace Backend.src.app.auth.infrastructure.Repositories
 {
     public class RolRepository : IRolRepository
     {

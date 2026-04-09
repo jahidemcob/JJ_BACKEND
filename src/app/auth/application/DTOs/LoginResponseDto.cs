@@ -1,4 +1,4 @@
-﻿namespace Auth.Application.DTOs
+﻿namespace Backend.src.app.auth.application.DTOs
 {
     public class LoginResponseDto
     {

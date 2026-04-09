@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace Auth.Domain.Entities
+namespace Backend.src.app.auth.domain.entities
 {
     public class Rol
     {

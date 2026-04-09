@@ -1,8 +1,9 @@
-using Auth.Application.UseCases;
-using Auth.Domain.Repositories;
-using Auth.Infrastructure.Context;
-using Auth.Infrastructure.Repositories;
+
+using Backend.src.app.auth.infrastructure.Repositories;
+using Backend.src.app.auth.application.UseCases;
+using Backend.src.app.auth.domain.repositories;
 using Backend.src.app.auth.application.Services;
+using Backend.src.app.auth.infrastructure.Context;
 using Backend.src.app.Features.Users.application.usecases;
 using Backend.src.app.Features.Users.application.UseCases;
 using Backend.src.app.Features.Users.domain.repositories;
@@ -95,9 +96,11 @@ if (app.Environment.IsDevelopment())
 }
 
 //  ORDEN IMPORTANTE
+
+app.UseMiddleware<Backend.src.app.Shared.Middleware.ErrorHandlerMiddleware>();
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAngular"); //  debe ir antes de auth
+app.UseCors("AllowAngular"); 
 
 app.UseAuthentication();
 app.UseAuthorization();

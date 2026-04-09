@@ -1,34 +1,38 @@
 ﻿using Backend.src.app.Features.Users.application.DTOs;
 using Backend.src.app.Features.Users.application.usecases;
 using Backend.src.app.Features.Users.application.UseCases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace Backend.src.app.Features.Users.API.Controllers
 {
     [ApiController]
     [Route("users")]
+    [Authorize(Roles = "Administrador")]
     public class UsersController : ControllerBase
     {
         private readonly UserListUsecase _userListUsecase;
+        private readonly GetUserByIdUsecase _getUserByIdUsecase;
         private readonly CreateUserUsecase _createUserUsecase;
         private readonly UpdateUserUsecase _updateUserUsecase;
         private readonly DisableUserUsecase _disableUserUsecase;
 
         public UsersController(
             UserListUsecase userListUsecase,
+            GetUserByIdUsecase getUserByIdUsecase,
             CreateUserUsecase createUserUsecase,
             UpdateUserUsecase updateUserUsecase,
             DisableUserUsecase disableUserUsecase
         )
         {
             _userListUsecase = userListUsecase;
+            _getUserByIdUsecase = getUserByIdUsecase;
             _createUserUsecase = createUserUsecase;
             _updateUserUsecase = updateUserUsecase;
             _disableUserUsecase = disableUserUsecase;
         }
 
-        // 🔹 GET /users
+        // GET /users
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -36,13 +40,11 @@ namespace Backend.src.app.Features.Users.API.Controllers
             return Ok(result);
         }
 
-        // 🔥 GET /users/{id} (NUEVO)
+        // GET /users/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var usuarios = await _userListUsecase.Execute();
-
-            var usuario = usuarios.FirstOrDefault(u => u.IdUsuario == id);
+            var usuario = await _getUserByIdUsecase.Execute(id);
 
             if (usuario == null)
                 return NotFound(new { message = "Usuario no encontrado" });
@@ -50,7 +52,7 @@ namespace Backend.src.app.Features.Users.API.Controllers
             return Ok(usuario);
         }
 
-        // 🔹 POST /users
+        // POST /users
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
         {
@@ -58,7 +60,7 @@ namespace Backend.src.app.Features.Users.API.Controllers
             return Ok(createdUser);
         }
 
-        // 🔹 PUT /users/{id}
+        // PUT /users/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto dto)
         {
@@ -69,7 +71,7 @@ namespace Backend.src.app.Features.Users.API.Controllers
             return Ok(updatedUser);
         }
 
-        // 🔹 PATCH /users/{id}/disable
+        // PATCH /users/{id}/disable
         [HttpPatch("{id}/disable")]
         public async Task<IActionResult> DisableUser(int id, [FromBody] UserDisableDto dto)
         {

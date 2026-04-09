@@ -16,5 +16,11 @@
 
             return computedHash.SequenceEqual(storedHash);
         }
+
+        public (byte[] Hash, byte[] Salt) HashPassword(string password)
+        {
+            CreatePasswordHash(password, out byte[] hash, out byte[] salt);
+            return (hash, salt);
+        }
     }
 }

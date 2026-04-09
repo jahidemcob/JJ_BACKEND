@@ -1,6 +1,6 @@
-﻿using Auth.Domain.Entities;
+﻿using Backend.src.app.auth.domain.entities;
 
-namespace Auth.Domain.Repositories
+namespace Backend.src.app.auth.domain.repositories
 {
     public interface IRolRepository
     {

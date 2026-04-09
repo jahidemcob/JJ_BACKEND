@@ -1,4 +1,5 @@
-﻿using Auth.Domain.Repositories;
+﻿
+using Backend.src.app.auth.domain.repositories;
 using Backend.src.app.Features.Users.application.DTOs;
 using Backend.src.app.Features.Users.domain.repositories;
 
@@ -36,7 +37,7 @@ namespace Backend.src.app.Features.Users.application.usecases
                     Correo = u.Correo,
                     IdRol = u.IdRol,
                     Rol = rol?.NombreRol ?? "Sin rol",
-                    Activo = u.Activo 
+                    Activo = u.Activo
                 });
             }
 

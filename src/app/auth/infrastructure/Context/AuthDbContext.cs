@@ -1,7 +1,7 @@
-﻿using Auth.Domain.Entities;
+﻿using Backend.src.app.auth.domain.entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Infrastructure.Context
+namespace Backend.src.app.auth.infrastructure.Context
 {
     public class AuthDbContext : DbContext
     {

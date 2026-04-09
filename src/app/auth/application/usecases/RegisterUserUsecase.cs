@@ -1,10 +1,10 @@
-﻿using Auth.Application.DTOs;
+﻿using Backend.src.app.auth.application.DTOs;
 using Backend.src.app.Shared.Constants;
 using Backend.src.app.Shared.Security;  
 using Backend.src.app.Features.Users.domain.repositories;
 using Backend.src.app.Features.Users.domain.Entities;
 
-namespace Auth.Application.UseCases
+namespace Backend.src.app.auth.application.UseCases
 {
     public class RegisterUserUseCase
     {

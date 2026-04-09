@@ -17,7 +17,21 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
         public async Task<IEnumerable<Usuario>> GetAllAsync()
         {
             return await _context.Usuarios
-                .ToListAsync(); // TRAER TODOS (activos e inactivos)
+                .ToListAsync(); 
+        }
+        public async Task<IEnumerable<Usuario>> GetActiveUsersAsync()
+        {
+            return await _context.Usuarios
+                .Where(u => u.Activo)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ActiveUser(int idUsuario)
+        {
+            return await _context.Usuarios
+                .Where(u => u.IdUsuario == idUsuario)
+                .Select(u => u.Activo)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Usuario?> GetByIdAsync(int id)
@@ -29,7 +43,9 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
         public async Task<Usuario?> GetByUsernameAsync(string nombreUsuario)
         {
             return await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.NombreUsuario == nombreUsuario);
+                .Where(u => EF.Functions.Collate(u.NombreUsuario!, "Latin1_General_CS_AS")
+                            == nombreUsuario)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Usuario?> GetByEmailAsync(string correo)

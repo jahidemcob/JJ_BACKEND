@@ -5,6 +5,7 @@ namespace Backend.src.app.Features.Users.domain.repositories
     public interface IUserManagementRepository
     {
         Task<IEnumerable<Usuario>> GetAllAsync();
+        Task<bool> ActiveUser(int idUsuario);
         Task<Usuario?> GetByIdAsync(int id);
         Task<Usuario?> GetByUsernameAsync(string nombreUsuario);
         Task<Usuario?> GetByEmailAsync(string correo);
