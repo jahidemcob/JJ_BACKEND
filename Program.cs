@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
@@ -22,43 +24,48 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("http://localhost:4200")
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials(); 
         });
 });
 
-// Servicios Básicos
-builder.Services.AddControllers();
+// Servicios básicos
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Config BD
+// Configuración de base de datos
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
 );
 
 builder.Services.AddDbContext<UsersDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);  
+);
 
 // Repositorios
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 
-// Servicios de Dominio
+// Servicios de dominio
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<TokenService>();
 
-// Casos de Uso (AUTH)
+// Casos de uso AUTH
 builder.Services.AddScoped<LoginUserUseCase>();
 builder.Services.AddScoped<RegisterUserUseCase>();
 
-// Casos de Uso (USERS)  ?? AGREGA ESTO
+// Casos de uso USERS
 builder.Services.AddScoped<UserListUsecase>();
 builder.Services.AddScoped<CreateUserUsecase>();
 builder.Services.AddScoped<UpdateUserUsecase>();
 builder.Services.AddScoped<DisableUserUsecase>();
 
-// JWT ?? CORREGIDO ??
+//  JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -78,18 +85,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Construcción de la aplicación
 var app = builder.Build();
 
+// Swagger solo en desarrollo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+//  ORDEN IMPORTANTE
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAngular");
+app.UseCors("AllowAngular"); //  debe ir antes de auth
 
 app.UseAuthentication();
 app.UseAuthorization();

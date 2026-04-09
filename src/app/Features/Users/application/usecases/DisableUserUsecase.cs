@@ -20,8 +20,8 @@ namespace Backend.src.app.Features.Users.application.UseCases
             if (usuario == null)
                 return false;
 
-            // Desactivar usuario
-            usuario.Activo = false;
+            // USAR EL VALOR QUE VIENE DEL FRONT
+            usuario.Activo = dto.Activo;
 
             await _userManagementRepository.UpdateAsync(usuario);
 

@@ -21,7 +21,6 @@ namespace Backend.src.app.Features.Users.application.usecases
         {
             var usuarios = await _userManagementRepository.GetAllAsync();
 
-            // Convertimos la entidad Usuario → UserResponseDto
             var lista = new List<UserResponseDto>();
 
             foreach (var u in usuarios)
@@ -36,7 +35,8 @@ namespace Backend.src.app.Features.Users.application.usecases
                     Telefono = u.Telefono,
                     Correo = u.Correo,
                     IdRol = u.IdRol,
-                    Rol = rol?.NombreRol ?? "Sin rol"
+                    Rol = rol?.NombreRol ?? "Sin rol",
+                    Activo = u.Activo 
                 });
             }
 

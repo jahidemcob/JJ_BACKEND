@@ -17,8 +17,7 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
         public async Task<IEnumerable<Usuario>> GetAllAsync()
         {
             return await _context.Usuarios
-                .Where(u => u.Activo) // Solo usuarios activos
-                .ToListAsync();
+                .ToListAsync(); // TRAER TODOS (activos e inactivos)
         }
 
         public async Task<Usuario?> GetByIdAsync(int id)
