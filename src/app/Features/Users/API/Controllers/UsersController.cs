@@ -82,7 +82,7 @@ namespace Backend.src.app.Features.Users.API.Controllers
             if (!success)
                 return NotFound(new { message = "Usuario no encontrado" });
 
-            return NoContent();
+            return Ok(new { message = "Usuario desactivado correctamente" });
         }
     }
 }

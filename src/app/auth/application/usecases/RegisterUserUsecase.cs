@@ -3,6 +3,7 @@ using Backend.src.app.Shared.Constants;
 using Backend.src.app.Shared.Security;  
 using Backend.src.app.Features.Users.domain.repositories;
 using Backend.src.app.Features.Users.domain.Entities;
+using Backend.src.app.auth.application.Exceptions;
 
 namespace Backend.src.app.auth.application.UseCases
 {
@@ -19,17 +20,17 @@ namespace Backend.src.app.auth.application.UseCases
             _passwordService = passwordService;
         }
 
-        public async Task<Usuario?> RegisterAsync(RegisterRequestDto request)
+        public async Task<Usuario> RegisterAsync(RegisterRequestDto request)
         {
             // 1. Verificar si existe alguien con ese username
             var existing = await _userRepo.GetByUsernameAsync(request.NombreUsuario);
             if (existing != null)
-                return null;
+                throw new UserOrEmailAlreadyUsedException();
 
             // (Opcional) Validar correo
             var existingEmail = await _userRepo.GetByEmailAsync(request.Correo);
             if (existingEmail != null)
-                return null;
+                throw new UserOrEmailAlreadyUsedException();
 
             // 2. Crear Hash + Salt
             _passwordService.CreatePasswordHash(
@@ -42,7 +43,7 @@ namespace Backend.src.app.auth.application.UseCases
                 NombreUsuario = request.NombreUsuario,
                 Telefono = request.Telefono,
                 Correo = request.Correo,
-                IdRol = Roles.Cliente, // !!! No hardcodeado
+                IdRol = Roles.Cliente, 
                 ClaveHash = hash,
                 ClaveSalt = salt,
                 Activo = true

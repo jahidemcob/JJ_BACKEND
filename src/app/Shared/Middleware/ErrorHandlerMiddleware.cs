@@ -30,51 +30,36 @@ namespace Backend.src.app.Shared.Middleware
         {
             context.Response.ContentType = "application/json";
 
-            var statusCode = StatusCodes.Status500InternalServerError;
-            var message = "Ocurrió un error inesperado.";
+            var (statusCode, message) = ex switch
+            {
+                // Auth
+                UserInactiveException => (StatusCodes.Status403Forbidden, ex.Message),
+                InvalidCredentialsException => (StatusCodes.Status401Unauthorized, ex.Message),
+                UserWithNoRolException => (StatusCodes.Status403Forbidden, ex.Message),
 
-            // Exceptions de Auth
-            if (ex is UserInactiveException)
-            {
-                statusCode = StatusCodes.Status403Forbidden;
-                message = ex.Message;
-            }
-            else if (ex is InvalidCredentialsException)
-            {
-                statusCode = StatusCodes.Status401Unauthorized;
-                message = ex.Message;
-            }
-            else if (ex is UserWithNoRolException)
-            {
-                statusCode = StatusCodes.Status500InternalServerError;
-                message = ex.Message;
-            }
+                UserOrEmailAlreadyUsedException => (StatusCodes.Status409Conflict, ex.Message),
 
-            // Exceptions de Users
-            else if (ex is EmailUsedException)
-            {
-                statusCode = StatusCodes.Status400BadRequest;
-                message = ex.Message;
-            }
-            else if (ex is UserNotFoundException)
-            {
-                statusCode = StatusCodes.Status404NotFound;
-                message = ex.Message;
-            }
-            else if (ex is UserAlreadyUsedException)
-            {
-                statusCode = StatusCodes.Status400BadRequest;
-                message = ex.Message;
-            }
-            else if (ex is RolNotExistException)
-            {
-                statusCode = StatusCodes.Status500InternalServerError;
-                message = ex.Message;
-            }
+                // Users
+                EmailUsedException => (StatusCodes.Status409Conflict, ex.Message),
+                UserAlreadyUsedException => (StatusCodes.Status409Conflict, ex.Message),
+
+                UserNotFoundException => (StatusCodes.Status404NotFound, ex.Message),
+                RolNotExistException => (StatusCodes.Status400BadRequest, ex.Message),
+
+                // Default
+                _ => (StatusCodes.Status500InternalServerError, "Ocurrió un error inesperado.")
+            };
 
             context.Response.StatusCode = statusCode;
 
-            var result = JsonSerializer.Serialize(new { error = message });
+            var result = JsonSerializer.Serialize(new
+            {
+                status = statusCode,
+                error = ex.GetType().Name,
+                message = message,
+                timestamp = DateTime.UtcNow
+            });
+
             await context.Response.WriteAsync(result);
         }
     }
