@@ -32,6 +32,11 @@ namespace Auth.API.Controllers
         {
             var result = await _registerUserUseCase.RegisterAsync(request);
 
+            if (result == null)
+            {
+                return Conflict(new { message = "El usuario o correo ya existe" }); // 409
+            }
+
             return Ok(new { message = "Usuario registrado correctamente" });
         }
     }
