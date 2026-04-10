@@ -34,7 +34,7 @@ namespace Auth.API.Controllers
 
             if (result == null)
             {
-                return Conflict(new { message = "El usuario o correo ya existe" }); 
+                return Conflict(new { message = "El usuario o correo ya existe" }); // 409
             }
 
             return Ok(new { message = "Usuario registrado correctamente" });
