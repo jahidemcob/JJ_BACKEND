@@ -1,7 +1,8 @@
-﻿using System.Net;
-using System.Text.Json;
-using Backend.src.app.auth.application.Exceptions;
+﻿using Backend.src.app.auth.application.Exceptions;
+using Backend.src.app.Features.Services.application.exceptions;
 using Backend.src.app.Features.Users.application.Exceptions;
+using System.Net;
+using System.Text.Json;
 
 namespace Backend.src.app.Shared.Middleware
 {
@@ -45,6 +46,12 @@ namespace Backend.src.app.Shared.Middleware
 
                 UserNotFoundException => (StatusCodes.Status404NotFound, ex.Message),
                 RolNotExistException => (StatusCodes.Status400BadRequest, ex.Message),
+
+                // Services
+                ServiceValidationException => (StatusCodes.Status400BadRequest, ex.Message),
+                ServiceAlreadyExistsException => (StatusCodes.Status409Conflict, ex.Message),
+                ServiceNotFoundException => (StatusCodes.Status404NotFound, ex.Message),
+
 
                 // Default
                 _ => (StatusCodes.Status500InternalServerError, "Ocurrió un error inesperado.")

@@ -20,7 +20,7 @@ namespace Backend.src.app.auth.application.UseCases
             _passwordService = passwordService;
         }
 
-        public async Task<Usuario> RegisterAsync(RegisterRequestDto request)
+        public async Task<User> RegisterAsync(RegisterRequestDto request)
         {
             // 1. Verificar si existe alguien con ese username
             var existing = await _userRepo.GetByUsernameAsync(request.NombreUsuario);
@@ -37,7 +37,7 @@ namespace Backend.src.app.auth.application.UseCases
                 request.Clave, out byte[] hash, out byte[] salt);
 
             // 3. Crear la entidad usuario
-            var usuario = new Usuario
+            var usuario = new User
             {
                 Nombre = request.Nombre,
                 NombreUsuario = request.NombreUsuario,

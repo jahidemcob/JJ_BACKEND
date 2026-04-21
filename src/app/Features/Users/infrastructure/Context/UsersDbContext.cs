@@ -10,13 +10,13 @@ namespace Backend.src.app.Features.Users.infrastructure.Context
         {
         }
 
-        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<User> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Usuario>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(u => u.IdUsuario);
 
@@ -35,10 +35,6 @@ namespace Backend.src.app.Features.Users.infrastructure.Context
                 entity.Property(u => u.Activo)
                     .HasDefaultValue(true);
 
-                // Si manejas roles:
-                // entity.HasOne(u => u.Rol)
-                //     .WithMany()
-                //     .HasForeignKey(u => u.IdRol);
             });
         }
     }

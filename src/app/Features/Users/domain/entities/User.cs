@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.src.app.Features.Users.domain.Entities
 {
-    public class Usuario
+    public class User
     {
         [Key]
         public int IdUsuario { get; set; }

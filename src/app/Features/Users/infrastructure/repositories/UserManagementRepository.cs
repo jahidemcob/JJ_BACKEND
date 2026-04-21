@@ -14,12 +14,12 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Usuario>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _context.Usuarios
                 .ToListAsync(); 
         }
-        public async Task<IEnumerable<Usuario>> GetActiveUsersAsync()
+        public async Task<IEnumerable<User>> GetActiveUsersAsync()
         {
             return await _context.Usuarios
                 .Where(u => u.Activo)
@@ -34,13 +34,13 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Usuario?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id)
         {
             return await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.IdUsuario == id);
         }
 
-        public async Task<Usuario?> GetByUsernameAsync(string nombreUsuario)
+        public async Task<User?> GetByUsernameAsync(string nombreUsuario)
         {
             return await _context.Usuarios
                 .Where(u => EF.Functions.Collate(u.NombreUsuario!, "Latin1_General_CS_AS")
@@ -48,25 +48,25 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Usuario?> GetByEmailAsync(string correo)
+        public async Task<User?> GetByEmailAsync(string correo)
         {
             return await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Correo == correo);
         }
 
-        public async Task CreateAsync(Usuario usuario)
+        public async Task CreateAsync(User usuario)
         {
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Usuario usuario)
+        public async Task UpdateAsync(User usuario)
         {
             _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Usuario usuario)
+        public async Task DeleteAsync(User usuario)
         {
             usuario.Activo = false; // Soft delete
             _context.Usuarios.Update(usuario);

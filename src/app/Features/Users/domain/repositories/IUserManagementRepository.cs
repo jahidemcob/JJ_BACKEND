@@ -4,13 +4,13 @@ namespace Backend.src.app.Features.Users.domain.repositories
 {
     public interface IUserManagementRepository
     {
-        Task<IEnumerable<Usuario>> GetAllAsync();
+        Task<IEnumerable<User>> GetAllAsync();
         Task<bool> ActiveUser(int idUsuario);
-        Task<Usuario?> GetByIdAsync(int id);
-        Task<Usuario?> GetByUsernameAsync(string nombreUsuario);
-        Task<Usuario?> GetByEmailAsync(string correo);
-        Task CreateAsync(Usuario usuario);
-        Task UpdateAsync(Usuario usuario);
-        Task DeleteAsync(Usuario usuario);
+        Task<User?> GetByIdAsync(int id);
+        Task<User?> GetByUsernameAsync(string nombreUsuario);
+        Task<User?> GetByEmailAsync(string correo);
+        Task CreateAsync(User usuario);
+        Task UpdateAsync(User usuario);
+        Task DeleteAsync(User usuario);
     }
 }

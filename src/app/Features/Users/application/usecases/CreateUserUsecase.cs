@@ -18,7 +18,7 @@ namespace Backend.src.app.Features.Users.application.UseCases
             _passwordService = passwordService;
         }
 
-        public async Task<Usuario> Execute(UserCreateDto dto)
+        public async Task<User> Execute(UserCreateDto dto)
         {
             // Validar nombre de usuario duplicado
             var existingUser = await _repo.GetByUsernameAsync(dto.NombreUsuario);
@@ -38,7 +38,7 @@ namespace Backend.src.app.Features.Users.application.UseCases
             );
 
             // Crear entidad
-            var user = new Usuario
+            var user = new User
             {
                 Nombre = dto.Nombre,
                 NombreUsuario = dto.NombreUsuario,

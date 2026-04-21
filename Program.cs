@@ -1,9 +1,13 @@
 
-using Backend.src.app.auth.infrastructure.Repositories;
+using Backend.src.app.auth.application.Services;
 using Backend.src.app.auth.application.UseCases;
 using Backend.src.app.auth.domain.repositories;
-using Backend.src.app.auth.application.Services;
 using Backend.src.app.auth.infrastructure.Context;
+using Backend.src.app.auth.infrastructure.Repositories;
+using Backend.src.app.Features.Services.application.usecases;
+using Backend.src.app.Features.Services.domain.repositories;
+using Backend.src.app.Features.Services.infrastructure.Context;
+using Backend.src.app.Features.Services.infrastructure.repositories;
 using Backend.src.app.Features.Users.application.usecases;
 using Backend.src.app.Features.Users.application.UseCases;
 using Backend.src.app.Features.Users.domain.repositories;
@@ -14,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,61 +36,74 @@ builder.Services.AddCors(options =>
 });
 
 // Servicios básicos
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    });
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+        });
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
 // Configuración de base de datos
-builder.Services.AddDbContext<AuthDbContext>(options =>
+    builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
+    );
 
-builder.Services.AddDbContext<UsersDbContext>(options =>
+    builder.Services.AddDbContext<UsersDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
+    );
+
+    builder.Services.AddDbContext<ServicesDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
+    );
 
 // Repositorios
-builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
-builder.Services.AddScoped<IRolRepository, RolRepository>();
+    builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
+    builder.Services.AddScoped<IRolRepository, RolRepository>();
+    builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
 
 // Servicios de dominio
 builder.Services.AddScoped<PasswordService>();
-builder.Services.AddScoped<TokenService>();
+    builder.Services.AddScoped<TokenService>();
 
 // Casos de uso AUTH
-builder.Services.AddScoped<LoginUserUseCase>();
-builder.Services.AddScoped<RegisterUserUseCase>();
+    builder.Services.AddScoped<LoginUserUseCase>();
+    builder.Services.AddScoped<RegisterUserUseCase>();
 
 // Casos de uso USERS
-builder.Services.AddScoped<UserListUsecase>();
-builder.Services.AddScoped<GetUserByIdUsecase>();
-builder.Services.AddScoped<CreateUserUsecase>();
-builder.Services.AddScoped<UpdateUserUsecase>();
-builder.Services.AddScoped<DisableUserUsecase>();
+    builder.Services.AddScoped<UserListUsecase>();
+    builder.Services.AddScoped<GetUserByIdUsecase>();
+    builder.Services.AddScoped<CreateUserUsecase>();
+    builder.Services.AddScoped<UpdateUserUsecase>();
+    builder.Services.AddScoped<DisableUserUsecase>();
+
+// Casos de Uso SERVICE
+    builder.Services.AddScoped<CreateServiceUseCase>();
+    builder.Services.AddScoped<UpdateServiceUseCase>();
+    builder.Services.AddScoped<DisableServiceUseCase>();
+    builder.Services.AddScoped<GetServiceByIdUseCase>();
+    builder.Services.AddScoped<GetAllServicesUseCase>();
+
 
 //  JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        var config = builder.Configuration;
-
-        options.TokenValidationParameters = new TokenValidationParameters
+        .AddJwtBearer(options =>
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = config["Jwt:Issuer"],
-            ValidAudience = config["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(config["Jwt:Key"])
-            )
-        };
-    });
+            var config = builder.Configuration;
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = config["Jwt:Issuer"],
+                ValidAudience = config["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(config["Jwt:Key"])
+                )
+            };
+        });
 
 var app = builder.Build();
 
@@ -98,8 +116,8 @@ if (app.Environment.IsDevelopment())
 
 //  ORDEN IMPORTANTE
 
-app.UseMiddleware<Backend.src.app.Shared.Middleware.ErrorHandlerMiddleware>();
 app.UseHttpsRedirection();
+app.UseMiddleware<Backend.src.app.Shared.Middleware.ErrorHandlerMiddleware>();
 
 app.UseCors("AllowAngular"); 
 
