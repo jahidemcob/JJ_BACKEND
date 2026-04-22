@@ -24,17 +24,15 @@ namespace Backend.src.app.Features.Services.application.usecases
             if (existing == null)
                 throw new ServiceNotFoundException(id);
 
-            // 3. VALIDAR SI YA ESTÁ DESACTIVADO
-            if (!existing.Activo)
-                throw new ServiceValidationException("El servicio ya se encuentra desactivado.");
+            // 3. cambiar estado
+            var newStatus = !existing.Activo;
 
-            // 4. DESACTIVAR
-            var result = await _repository.DisableServiceAsync(id);
+            var result = await _repository.UpdateServiceStatusAsync(id, newStatus);
 
             if (!result)
-                throw new Exception("No se pudo desactivar el servicio.");
+                throw new Exception("No se pudo cambiar el estado del servicio.");
 
-            return true;
+            return newStatus;
         }
     }
 }

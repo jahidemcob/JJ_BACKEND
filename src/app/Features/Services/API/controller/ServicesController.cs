@@ -15,7 +15,7 @@ namespace Backend.src.app.Features.Services.API
         private readonly GetAllServicesUseCase _getAll;
 
         public ServicesController(
-            CreateServiceUseCase create,
+            CreateServiceUseCase create,   
             UpdateServiceUseCase update,
             DisableServiceUseCase disable,
             GetServiceByIdUseCase getById,
@@ -66,8 +66,13 @@ namespace Backend.src.app.Features.Services.API
         [HttpPatch("{id}/disable")]
         public async Task<IActionResult> Disable(int id)
         {
-            await _disable.Execute(id);
-            return Ok(new { message = "Servicio desactivado correctamente" });
+            var status = await _disable.Execute(id);
+
+            var message = status
+                ? "Servicio activado correctamente"
+                : "Servicio desactivado correctamente";
+
+            return Ok(new { message, status });
         }
     }
 }

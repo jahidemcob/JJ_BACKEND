@@ -8,6 +8,7 @@ namespace Backend.src.app.Features.Services.domain.repositories
         Task <IEnumerable<Service>> GetAllServicesAsync();
         Task <int> CreateServiceAsync (Service service);
         Task <bool> UpdateServiceAsync (Service service);
-        Task <bool> DisableServiceAsync (int id);
+        Task <bool> UpdateServiceStatusAsync (int id, bool Activo);  
+
     }
 }

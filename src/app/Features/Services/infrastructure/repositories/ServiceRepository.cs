@@ -8,22 +8,24 @@ namespace Backend.src.app.Features.Services.infrastructure.repositories
     public class ServiceRepository : IServicesRepository
     {
         private readonly ServicesDbContext _context;
+
         public ServiceRepository(ServicesDbContext context)
         {
             _context = context;
         }
 
+  
         public async Task<Service?> GetServiceById(int id)
         {
-            return await _context.Services.
-                FirstOrDefaultAsync(s => s.idServicio == id);
+            return await _context.Services.FindAsync(id);
         }
 
+        
         public async Task<IEnumerable<Service>> GetAllServicesAsync()
         {
-            return await _context.Services.
-                Where(s => s.Activo == true).
-                ToListAsync();
+            return await _context.Services
+                .Where(s => s.Activo)
+                .ToListAsync();
         }
 
         public async Task<int> CreateServiceAsync(Service service)
@@ -33,10 +35,10 @@ namespace Backend.src.app.Features.Services.infrastructure.repositories
             return service.idServicio;
         }
 
+        
         public async Task<bool> UpdateServiceAsync(Service service)
         {
-            var existing = await _context.Services
-                .FirstOrDefaultAsync(s => s.idServicio == service.idServicio);
+            var existing = await _context.Services.FindAsync(service.idServicio);
 
             if (existing == null)
                 return false;
@@ -47,21 +49,21 @@ namespace Backend.src.app.Features.Services.infrastructure.repositories
 
             await _context.SaveChangesAsync();
             return true;
-
         }
 
-        public async Task<bool> DisableServiceAsync(int id)
+
+        public async Task<bool> UpdateServiceStatusAsync(int id, bool activo)
         {
-            var service = await _context.Services
-                .FirstOrDefaultAsync(s => s.idServicio == id);
+            var service = await _context.Services.FindAsync(id);
 
             if (service == null)
                 return false;
 
-            service.Activo = false;
-            await _context.SaveChangesAsync();
-            return true;
+            service.Activo = activo;
 
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
