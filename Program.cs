@@ -35,7 +35,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Servicios básicos
+// Servicios bï¿½sicos
     builder.Services.AddControllers()
         .AddJsonOptions(options =>
         {
@@ -44,7 +44,7 @@ builder.Services.AddCors(options =>
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-// Configuración de base de datos
+// Configuraciï¿½n de base de datos
     builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
     );
@@ -107,12 +107,43 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// Swagger solo en desarrollo
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var services = scope.ServiceProvider;
+
+    var retries = 10;
+    var delay = TimeSpan.FromSeconds(5);
+
+    while (retries > 0)
+    {
+        try
+        {
+            var authDb = services.GetRequiredService<AuthDbContext>();
+            var usersDb = services.GetRequiredService<UsersDbContext>();
+            var servicesDb = services.GetRequiredService<ServicesDbContext>();
+
+            authDb.Database.Migrate();
+            usersDb.Database.Migrate();
+            servicesDb.Database.Migrate();
+
+            Console.WriteLine("Migraciones aplicadas correctamente âœ…");
+            break;
+        }
+        catch (Exception ex)
+        {
+            retries--;
+            Console.WriteLine($"Error conectando a DB, reintentos restantes: {retries}");
+            Console.WriteLine(ex.Message);
+
+            if (retries == 0) throw;
+
+            Thread.Sleep(delay);
+        }
+    }
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 //  ORDEN IMPORTANTE
 
