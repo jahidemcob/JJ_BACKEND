@@ -57,9 +57,16 @@ namespace Backend.src.app.Features.Services.API
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] bool? onlyActive)
         {
             var list = await _getAll.Execute();
+
+            if (onlyActive == true)
+                list = list.Where(s => s.IsActive).ToList();
+
+            if (onlyActive == false)
+                list = list.Where(s => !s.IsActive).ToList();
+
             return Ok(list);
         }
 

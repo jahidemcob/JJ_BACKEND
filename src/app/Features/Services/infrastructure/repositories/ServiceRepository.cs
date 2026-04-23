@@ -23,9 +23,7 @@ namespace Backend.src.app.Features.Services.infrastructure.repositories
         
         public async Task<IEnumerable<Service>> GetAllServicesAsync()
         {
-            return await _context.Services
-                .Where(s => s.Activo)
-                .ToListAsync();
+            return await _context.Services.ToListAsync();
         }
 
         public async Task<int> CreateServiceAsync(Service service)
