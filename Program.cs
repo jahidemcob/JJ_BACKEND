@@ -1,4 +1,3 @@
-
 using Backend.src.app.auth.application.Services;
 using Backend.src.app.auth.application.UseCases;
 using Backend.src.app.auth.domain.repositories;
@@ -14,15 +13,19 @@ using Backend.src.app.Features.Users.domain.repositories;
 using Backend.src.app.Features.Users.infrastructure.Context;
 using Backend.src.app.Features.Users.infrastructure.Repositories;
 using Backend.src.app.Shared.Security;
+
+// 👇 IMPORTANTE para seed
+using Backend.src.app.auth.domain.entities;
+using Backend.src.app.Features.Users.domain.Entities;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
@@ -31,82 +34,85 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("http://localhost:4200")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
-                  .AllowCredentials(); 
+                  .AllowCredentials();
         });
 });
 
-// Servicios b�sicos
-    builder.Services.AddControllers()
-        .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-        });
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+// Servicios básicos
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 
-// Configuraci�n de base de datos
-    builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-    );
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-    builder.Services.AddDbContext<UsersDbContext>(options =>
+// DB Contexts
+builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-    );
+);
 
-    builder.Services.AddDbContext<ServicesDbContext>(options =>
+builder.Services.AddDbContext<UsersDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-    );
+);
+
+builder.Services.AddDbContext<ServicesDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
+);
 
 // Repositorios
-    builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
-    builder.Services.AddScoped<IRolRepository, RolRepository>();
-    builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
+builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
+builder.Services.AddScoped<IRolRepository, RolRepository>();
+builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
 
-// Servicios de dominio
+// Servicios
 builder.Services.AddScoped<PasswordService>();
-    builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<TokenService>();
 
-// Casos de uso AUTH
-    builder.Services.AddScoped<LoginUserUseCase>();
-    builder.Services.AddScoped<RegisterUserUseCase>();
+// AUTH
+builder.Services.AddScoped<LoginUserUseCase>();
+builder.Services.AddScoped<RegisterUserUseCase>();
 
-// Casos de uso USERS
-    builder.Services.AddScoped<UserListUsecase>();
-    builder.Services.AddScoped<GetUserByIdUsecase>();
-    builder.Services.AddScoped<CreateUserUsecase>();
-    builder.Services.AddScoped<UpdateUserUsecase>();
-    builder.Services.AddScoped<DisableUserUsecase>();
+// USERS
+builder.Services.AddScoped<UserListUsecase>();
+builder.Services.AddScoped<GetUserByIdUsecase>();
+builder.Services.AddScoped<CreateUserUsecase>();
+builder.Services.AddScoped<UpdateUserUsecase>();
+builder.Services.AddScoped<DisableUserUsecase>();
 
-// Casos de Uso SERVICE
-    builder.Services.AddScoped<CreateServiceUseCase>();
-    builder.Services.AddScoped<UpdateServiceUseCase>();
-    builder.Services.AddScoped<DisableServiceUseCase>();
-    builder.Services.AddScoped<GetServiceByIdUseCase>();
-    builder.Services.AddScoped<GetAllServicesUseCase>();
+// SERVICES
+builder.Services.AddScoped<CreateServiceUseCase>();
+builder.Services.AddScoped<UpdateServiceUseCase>();
+builder.Services.AddScoped<DisableServiceUseCase>();
+builder.Services.AddScoped<GetServiceByIdUseCase>();
+builder.Services.AddScoped<GetAllServicesUseCase>();
 
-
-//  JWT
+// JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            var config = builder.Configuration;
+    .AddJwtBearer(options =>
+    {
+        var config = builder.Configuration;
 
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = config["Jwt:Issuer"],
-                ValidAudience = config["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(config["Jwt:Key"])
-                )
-            };
-        });
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = config["Jwt:Issuer"],
+            ValidAudience = config["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(config["Jwt:Key"])
+            )
+        };
+    });
 
 var app = builder.Build();
 
+// =======================
+// 🐳 SOLO EN DOCKER (NO Development)
+// =======================
 if (!app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
@@ -123,12 +129,54 @@ if (!app.Environment.IsDevelopment())
                 var authDb = services.GetRequiredService<AuthDbContext>();
                 var usersDb = services.GetRequiredService<UsersDbContext>();
                 var servicesDb = services.GetRequiredService<ServicesDbContext>();
+                var passwordService = services.GetRequiredService<PasswordService>();
 
+                // Migraciones
                 authDb.Database.Migrate();
                 usersDb.Database.Migrate();
                 servicesDb.Database.Migrate();
 
-                Console.WriteLine("Migraciones aplicadas correctamente ✅");
+                // =======================
+                // 🌱 SEED DE DATOS
+                // =======================
+
+                var PasswordService = services.GetRequiredService<PasswordService>();
+
+                // 🔹 ROLES
+                if (!authDb.Roles.Any())
+                {
+                    authDb.Roles.AddRange(
+                        new Rol { NombreRol = "Administrador" },
+                        new Rol { NombreRol = "Empleado" },
+                        new Rol { NombreRol = "Cliente" }
+                    );
+
+                    authDb.SaveChanges();
+                }
+
+                // 🔹 USUARIO ADMIN
+                if (!usersDb.Usuarios.Any()) // ⚠️ aquí cambia Usuarios -> Users
+                {
+                    var passwordData = passwordService.HashPassword("Admin123*");
+
+                    var adminRol = authDb.Roles.First(r => r.NombreRol == "Administrador");
+
+                    usersDb.Usuarios.Add(new User
+                    {
+                        Nombre = "Administrador",
+                        NombreUsuario = "admin", // ✅ nombre correcto
+                        Correo = "admin@demo.com",
+                        Telefono = "0000000000",
+                        ClaveHash = passwordData.Hash,
+                        ClaveSalt = passwordData.Salt,
+                        IdRol = adminRol.IdRol,
+                        Activo = true
+                    });
+
+                    usersDb.SaveChanges();
+                }
+
+                Console.WriteLine("Migraciones y seed aplicados correctamente ✅");
                 break;
             }
             catch (Exception ex)
@@ -145,15 +193,15 @@ if (!app.Environment.IsDevelopment())
     }
 }
 
+// Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
 
-//  ORDEN IMPORTANTE
-
+// Middleware
 app.UseHttpsRedirection();
 app.UseMiddleware<Backend.src.app.Shared.Middleware.ErrorHandlerMiddleware>();
 
-app.UseCors("AllowAngular"); 
+app.UseCors("AllowAngular");
 
 app.UseAuthentication();
 app.UseAuthorization();
