@@ -107,37 +107,40 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsDevelopment())
 {
-    var services = scope.ServiceProvider;
-
-    var retries = 10;
-    var delay = TimeSpan.FromSeconds(5);
-
-    while (retries > 0)
+    using (var scope = app.Services.CreateScope())
     {
-        try
+        var services = scope.ServiceProvider;
+
+        var retries = 10;
+        var delay = TimeSpan.FromSeconds(5);
+
+        while (retries > 0)
         {
-            var authDb = services.GetRequiredService<AuthDbContext>();
-            var usersDb = services.GetRequiredService<UsersDbContext>();
-            var servicesDb = services.GetRequiredService<ServicesDbContext>();
+            try
+            {
+                var authDb = services.GetRequiredService<AuthDbContext>();
+                var usersDb = services.GetRequiredService<UsersDbContext>();
+                var servicesDb = services.GetRequiredService<ServicesDbContext>();
 
-            authDb.Database.Migrate();
-            usersDb.Database.Migrate();
-            servicesDb.Database.Migrate();
+                authDb.Database.Migrate();
+                usersDb.Database.Migrate();
+                servicesDb.Database.Migrate();
 
-            Console.WriteLine("Migraciones aplicadas correctamente ✅");
-            break;
-        }
-        catch (Exception ex)
-        {
-            retries--;
-            Console.WriteLine($"Error conectando a DB, reintentos restantes: {retries}");
-            Console.WriteLine(ex.Message);
+                Console.WriteLine("Migraciones aplicadas correctamente ✅");
+                break;
+            }
+            catch (Exception ex)
+            {
+                retries--;
+                Console.WriteLine($"Error conectando a DB, reintentos restantes: {retries}");
+                Console.WriteLine(ex.Message);
 
-            if (retries == 0) throw;
+                if (retries == 0) throw;
 
-            Thread.Sleep(delay);
+                Thread.Sleep(delay);
+            }
         }
     }
 }
