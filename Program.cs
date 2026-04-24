@@ -110,9 +110,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// =======================
-// 🐳 SOLO EN DOCKER (NO Development)
-// =======================
+//  SOLO EN DOCKER 
 if (!app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
@@ -136,13 +134,9 @@ if (!app.Environment.IsDevelopment())
                 usersDb.Database.Migrate();
                 servicesDb.Database.Migrate();
 
-                // =======================
-                // 🌱 SEED DE DATOS
-                // =======================
-
                 var PasswordService = services.GetRequiredService<PasswordService>();
 
-                // 🔹 ROLES
+              
                 if (!authDb.Roles.Any())
                 {
                     authDb.Roles.AddRange(
@@ -154,8 +148,7 @@ if (!app.Environment.IsDevelopment())
                     authDb.SaveChanges();
                 }
 
-                // 🔹 USUARIO ADMIN
-                if (!usersDb.Usuarios.Any()) // ⚠️ aquí cambia Usuarios -> Users
+                if (!usersDb.Usuarios.Any()) 
                 {
                     var passwordData = passwordService.HashPassword("Admin123*");
 
@@ -164,7 +157,7 @@ if (!app.Environment.IsDevelopment())
                     usersDb.Usuarios.Add(new User
                     {
                         Nombre = "Administrador",
-                        NombreUsuario = "admin", // ✅ nombre correcto
+                        NombreUsuario = "admin", 
                         Correo = "admin@demo.com",
                         Telefono = "0000000000",
                         ClaveHash = passwordData.Hash,
@@ -176,7 +169,7 @@ if (!app.Environment.IsDevelopment())
                     usersDb.SaveChanges();
                 }
 
-                Console.WriteLine("Migraciones y seed aplicados correctamente ✅");
+                Console.WriteLine("Migraciones y seed aplicados correctamente ");
                 break;
             }
             catch (Exception ex)
