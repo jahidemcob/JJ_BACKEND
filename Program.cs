@@ -14,7 +14,6 @@ using Backend.src.app.Features.Users.infrastructure.Context;
 using Backend.src.app.Features.Users.infrastructure.Repositories;
 using Backend.src.app.Shared.Security;
 
-// 👇 IMPORTANTE para seed
 using Backend.src.app.auth.domain.entities;
 using Backend.src.app.Features.Users.domain.Entities;
 
@@ -25,7 +24,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
