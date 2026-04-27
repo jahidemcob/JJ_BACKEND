@@ -68,10 +68,10 @@ namespace Backend.src.app.Features.Services.API
             var list = await _getAll.Execute();
 
             if (onlyActive == true)
-                list = list.Where(s => s.Activo).ToList();
+                list = list.Where(s => s.IsActive).ToList();
 
             if (onlyActive == false)
-                list = list.Where(s => !s.Activo).ToList();
+                list = list.Where(s => !s.IsActive).ToList();
 
             return Ok(list);
         }

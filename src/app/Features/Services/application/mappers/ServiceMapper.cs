@@ -13,7 +13,7 @@ namespace Backend.src.app.Features.Services.application.mappers
                 NombreServicio = s.nombreServicio,
                 Descripcion = s.descripcion,
                 PrecioBase = s.precioBase,
-                Activo = s.Activo
+                IsActive = s.Activo
             };
         }
         public static List<ServiceResponseDto> ToDtoList(IEnumerable<Service> services)
