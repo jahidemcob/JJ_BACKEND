@@ -13,11 +13,8 @@ using Backend.src.app.Features.Users.domain.repositories;
 using Backend.src.app.Features.Users.infrastructure.Context;
 using Backend.src.app.Features.Users.infrastructure.Repositories;
 using Backend.src.app.Shared.Security;
-
-// 👇 IMPORTANTE para seed
 using Backend.src.app.auth.domain.entities;
 using Backend.src.app.Features.Users.domain.Entities;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -84,7 +81,7 @@ builder.Services.AddScoped<DisableUserUsecase>();
 // SERVICES
 builder.Services.AddScoped<CreateServiceUseCase>();
 builder.Services.AddScoped<UpdateServiceUseCase>();
-builder.Services.AddScoped<DisableServiceUseCase>();
+builder.Services.AddScoped<UpdateServiceStatusUsecase>();
 builder.Services.AddScoped<GetServiceByIdUseCase>();
 builder.Services.AddScoped<GetAllServicesUseCase>();
 
@@ -110,7 +107,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-//  SOLO EN DOCKER 
+//  Docker 
 if (!app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())

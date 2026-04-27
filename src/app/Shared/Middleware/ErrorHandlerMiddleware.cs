@@ -54,7 +54,7 @@ namespace Backend.src.app.Shared.Middleware
 
 
                 // Default
-                _ => (StatusCodes.Status500InternalServerError, "Ocurrió un error inesperado.")
+                _ => (StatusCodes.Status500InternalServerError, ex.ToString())
             };
 
             context.Response.StatusCode = statusCode;

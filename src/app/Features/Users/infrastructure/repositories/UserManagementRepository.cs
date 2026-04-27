@@ -1,4 +1,5 @@
-﻿using Backend.src.app.Features.Users.domain.Entities;
+﻿using Backend.src.app.auth.application.UseCases;
+using Backend.src.app.Features.Users.domain.Entities;
 using Backend.src.app.Features.Users.domain.repositories;
 using Backend.src.app.Features.Users.infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -50,8 +51,10 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
 
         public async Task<User?> GetByEmailAsync(string correo)
         {
+            correo = correo.Trim().ToLower();
+
             return await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Correo == correo);
+                .FirstOrDefaultAsync(u => u.Correo.Trim().ToLower() == correo);
         }
 
         public async Task CreateAsync(User usuario)
@@ -60,15 +63,16 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(User usuario)
+        public async Task<bool> UpdateAsync(User usuario)
         {
             _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task DeleteAsync(User usuario)
         {
-            usuario.Activo = false; // Soft delete
+            usuario.Activo = false; 
             _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
         }

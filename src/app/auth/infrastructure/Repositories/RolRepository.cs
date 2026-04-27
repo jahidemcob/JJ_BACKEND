@@ -19,5 +19,10 @@ namespace Backend.src.app.auth.infrastructure.Repositories
             return await _context.Roles
                 .FirstOrDefaultAsync(r => r.IdRol == id);
         }
+
+        public async Task<IEnumerable<Rol>> GetAllAsync()
+        {
+            return await _context.Roles.ToListAsync();
+        }
     }
 }

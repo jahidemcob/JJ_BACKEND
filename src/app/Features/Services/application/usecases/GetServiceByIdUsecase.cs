@@ -1,6 +1,7 @@
 ﻿using Backend.src.app.Features.Services.application.DTOs;
 using Backend.src.app.Features.Services.application.exceptions;
 using Backend.src.app.Features.Services.domain.repositories;
+using Backend.src.app.Features.Services.application.mappers;
 
 namespace Backend.src.app.Features.Services.application.usecases
 {
@@ -13,7 +14,7 @@ namespace Backend.src.app.Features.Services.application.usecases
             _repository = repository;
         }
 
-        public async Task<ServiceListDto> Execute(int id)
+        public async Task<ServiceResponseDto> Execute(int id)
         {
             // VALIDACIÓN
             if (id <= 0)
@@ -25,17 +26,7 @@ namespace Backend.src.app.Features.Services.application.usecases
             if (service == null)
                 throw new ServiceNotFoundException(id);
 
-            // MAPEO Domain → DTO
-            var dto = new ServiceListDto
-            {
-                IdServicio = service.idServicio,
-                NombreServicio = service.nombreServicio,
-                Descripcion = service.descripcion,
-                PrecioBase = service.precioBase,
-                IsActive = service.Activo
-            };
-
-            return dto;
+            return ServiceMapper.ToDto(service);
         }
     }
 }

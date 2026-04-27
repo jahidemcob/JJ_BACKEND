@@ -10,14 +10,14 @@ namespace Backend.src.app.Features.Services.API
     {
         private readonly CreateServiceUseCase _create;
         private readonly UpdateServiceUseCase _update;
-        private readonly DisableServiceUseCase _disable;
+        private readonly UpdateServiceStatusUsecase _disable;
         private readonly GetServiceByIdUseCase _getById;
         private readonly GetAllServicesUseCase _getAll;
 
         public ServicesController(
-            CreateServiceUseCase create,   
+            CreateServiceUseCase create,
             UpdateServiceUseCase update,
-            DisableServiceUseCase disable,
+            UpdateServiceStatusUsecase disable,
             GetServiceByIdUseCase getById,
             GetAllServicesUseCase getAll)
         {
@@ -28,6 +28,8 @@ namespace Backend.src.app.Features.Services.API
             _getAll = getAll;
         }
 
+
+        //Crear Servicio
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ServiceCreateDto dto)
         {
@@ -35,20 +37,23 @@ namespace Backend.src.app.Features.Services.API
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { id = service.idServicio },
+                new { id = service.IdServicio },
                 service
             );
         }
 
+        //Actualizar Servicio
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ServiceUpdateDto dto)
         {
             dto.IdServicio = id;
-            await _update.Execute(dto);
 
-            return Ok(new { message = "Servicio actualizado correctamente" });
+            var updated = await _update.Execute(dto);
+
+            return Ok(updated);
         }
 
+        //Obtener Servicio por ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -56,20 +61,22 @@ namespace Backend.src.app.Features.Services.API
             return Ok(service);
         }
 
+        //Obtener todos los Servicios
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] bool? onlyActive)
         {
             var list = await _getAll.Execute();
 
             if (onlyActive == true)
-                list = list.Where(s => s.IsActive).ToList();
+                list = list.Where(s => s.Activo).ToList();
 
             if (onlyActive == false)
-                list = list.Where(s => !s.IsActive).ToList();
+                list = list.Where(s => !s.Activo).ToList();
 
             return Ok(list);
         }
 
+        //Activar/Desactivar Servicio
         [HttpPatch("{id}/disable")]
         public async Task<IActionResult> Disable(int id)
         {
