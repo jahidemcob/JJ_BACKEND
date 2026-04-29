@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="src\app\Features\Motobikes\API\" />
-    <Folder Include="src\app\Features\Motobikes\infrastructure\" />
   </ItemGroup>
 
 </Project>
