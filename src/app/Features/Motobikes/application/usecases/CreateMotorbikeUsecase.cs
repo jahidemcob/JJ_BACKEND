@@ -18,49 +18,47 @@ namespace Backend.src.app.Features.Motobikes.application.usecases
 
         public async Task<MotorbikeResponseDto> Execute(MotorbikeCreateDto dto)
         {
-
             // Validar que el idUsuario sea mayor a 0
             if (dto.IdUsuario <= 0)
                 throw new MotorbikeValidationException("El IdUsuario no es valido.");
 
-            // Validar que la marca no este vacia
+            // Validar marca
             if (string.IsNullOrWhiteSpace(dto.marca))
                 throw new MotorbikeValidationException("La marca no puede estar vacia.");
 
-            // Validar que el modelo no este vacio
+            // Validar modelo
             if (string.IsNullOrWhiteSpace(dto.modelo))
                 throw new MotorbikeValidationException("El modelo no puede estar vacio.");
 
-            // Validar que la placa no este vacia
+            // Validar placa
             if (string.IsNullOrWhiteSpace(dto.placa))
                 throw new MotorbikeValidationException("La placa no puede estar vacia.");
 
-            //Validar que la placa tenga un formato valido 
+            // Normalizar placa
             var placa = dto.placa.ToUpper().Trim();
+
+            // Validar formato de placa
             var regex = new Regex(@"^[A-Z]{3}[0-9]{2}[A-Z]$");
             if (!regex.IsMatch(placa))
-                throw new MotorbikeValidationException("La placa no tiene un formato valido. El formato debe ser tres letras mayusculas, seguidas de dos numeros y una letra mayuscula al final que hace referencia al año de la moto (Ejemplo: ABC12D).");
+                throw new MotorbikeValidationException("La placa no tiene un formato valido. El formato debe ser tres letras mayusculas, seguidas de dos numeros y una letra mayuscula al final (Ejemplo: ABC12D).");
 
-            // Validar que la placa sea unica
+            // Validar placa única
             if (await _MotorbikeRepository.ExistsByPlateAsync(placa))
                 throw new MotorbikeValidationException("La placa ya existe. Por favor ingrese una placa unica.");
 
-            // Validar que el cilindraje sea mayor a 0
-            if (dto.cilindraje <=0)
+            // Validar cilindraje
+            if (dto.cilindraje <= 0)
                 throw new MotorbikeValidationException("El cilindraje debe ser mayor a 0.");
 
-            // Validar que el año sea mayor a 2010
-            if (dto.anio > 2010)
-                throw new MotorbikeValidationException("El año debe ser mayor a 2010.");
+            // Validar año
+            int currentYear = DateTime.UtcNow.Year;
+            if (dto.anio < 2010 || dto.anio > currentYear + 1)
+                throw new MotorbikeValidationException("El año de la moto no es válido.");
 
             var moto = MotorbikeMapper.ToEntity(dto, placa);
-
             var createdMoto = await _MotorbikeRepository.CreateMotorbikeAsync(moto);
 
-            var response = MotorbikeMapper.ToDto(createdMoto);
-
-            return response;
-
+            return MotorbikeMapper.ToDto(createdMoto);
         }
     }
 }

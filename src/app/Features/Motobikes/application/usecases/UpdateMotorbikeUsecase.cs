@@ -23,24 +23,46 @@ namespace Backend.src.app.Features.Motobikes.application.usecases
             if (moto == null)
                 throw new MotorbikeNotFoundException(idMoto);
 
-            // 2. Validar campos (solo si vienen cambios)
-            if (!string.IsNullOrWhiteSpace(dto.marca))
+            // Validar campo marca
+            if (dto.marca != null)
+            {
+                if (string.IsNullOrWhiteSpace(dto.marca))
+                    throw new MotorbikeValidationException("La marca no puede estar vacía.");
+
                 moto.marca = dto.marca;
+            }
 
-            if (!string.IsNullOrWhiteSpace(dto.modelo))
+            // Validar campo modelo
+            if (dto.modelo != null)
+            {
+                if (string.IsNullOrWhiteSpace(dto.modelo))
+                    throw new MotorbikeValidationException("El modelo no puede estar vacío.");
+
                 moto.modelo = dto.modelo;
+            }
 
-            if (dto.cilindraje > 0)
-                moto.cilindraje = dto.cilindraje;
+            // Validar campo cilindraje
+            if (dto.cilindraje != null)
+            {
+                if (dto.cilindraje <= 0)
+                    throw new MotorbikeValidationException("El cilindraje debe ser mayor a 0.");
 
-            if (dto.anio > 2010)
-                moto.anio = dto.anio;
+                moto.cilindraje = dto.cilindraje.Value;
+            }
 
-            // 4. Guardar cambios
+            //Validar campo año
+            if (dto.anio != null)
+            {
+                int currentYear = DateTime.UtcNow.Year;
+
+                if (dto.anio < 1900 || dto.anio > currentYear + 1)
+                    throw new MotorbikeValidationException("El año ingresado no es válido.");
+
+                moto.anio = dto.anio.Value;
+            }
+
+            //Guardar cambios
             var updatedMoto = await _MotorbikeRepository.UpdateMotorbikeAsync(moto);
-
-            if (updatedMoto == null)
-                throw new MotorbikeValidationException("No se pudo actualizar la moto.");
 
             return MotorbikeMapper.ToDto(updatedMoto);
         }

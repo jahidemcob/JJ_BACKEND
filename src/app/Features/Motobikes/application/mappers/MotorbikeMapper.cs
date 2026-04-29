@@ -51,5 +51,10 @@ namespace Backend.src.app.Features.Motobikes.application.mappers
                 nombreUsuario = nombreUsuario
             };
         }
+
+        public static IEnumerable<MotorbikeWithUserResponseDto> ToDtoWithUser(IEnumerable<(Motorbike moto, string nombreUsuario)> source)
+        {
+            return source.Select(x => ToDtoWithUser(x.moto, x.nombreUsuario));
+        }
     }
 }
