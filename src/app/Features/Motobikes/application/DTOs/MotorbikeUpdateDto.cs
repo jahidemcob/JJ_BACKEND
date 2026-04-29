@@ -1,7 +1,8 @@
 ﻿namespace Backend.src.app.Features.Motobikes.application.DTOs
 {
-    public class CreateMotorbikeDTO
+    public class MotorbikeUpdateDto
     {
+        public int IdMoto { get; set; }
         public int IdUsuario { get; set; }
         public string marca { get; set; }
         public string modelo { get; set; }

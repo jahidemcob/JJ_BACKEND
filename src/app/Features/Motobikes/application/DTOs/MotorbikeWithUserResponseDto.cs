@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Backend.src.app.Features.Motobikes.domain.entities
+﻿namespace Backend.src.app.Features.Motobikes.application.DTOs
 {
-    public class Motorbike
+    public class MotorbikeWithUserResponseDto
     {
-        [Key]
         public int idMoto { get; set; }
         public int idUsuario { get; set; }
         public string marca { get; set; }
@@ -12,6 +9,7 @@ namespace Backend.src.app.Features.Motobikes.domain.entities
         public string placa { get; set; }
         public int cilindraje { get; set; }
         public int anio { get; set; }
-        public bool Activo { get; set; } = true;
+        public bool Activo { get; set; }
+        public string nombreUsuario { get; set; }
     }
 }
