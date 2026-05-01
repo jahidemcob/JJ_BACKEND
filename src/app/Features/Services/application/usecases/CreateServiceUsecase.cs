@@ -2,6 +2,7 @@
 using Backend.src.app.Features.Services.application.exceptions;
 using Backend.src.app.Features.Services.domain.entities;
 using Backend.src.app.Features.Services.domain.repositories;
+using Backend.src.app.Features.Services.application.mappers;
 
 namespace Backend.src.app.Features.Services.application.usecases
 {
@@ -14,7 +15,7 @@ namespace Backend.src.app.Features.Services.application.usecases
             _repository = repository;
         }
 
-        public async Task<Service> Execute(ServiceCreateDto dto)  
+        public async Task<ServiceResponseDto> Execute(ServiceCreateDto dto)  
         {
             // VALIDACIONES
             if (string.IsNullOrWhiteSpace(dto.NombreServicio))
@@ -44,7 +45,7 @@ namespace Backend.src.app.Features.Services.application.usecases
             var newId = await _repository.CreateServiceAsync(service);
             service.idServicio = newId;
 
-            return service;
+            return ServiceMapper.ToDto(service);
         }
     }
 }

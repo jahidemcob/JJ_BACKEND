@@ -1,5 +1,4 @@
-﻿
-using Backend.src.app.auth.domain.repositories;
+﻿using Backend.src.app.auth.domain.repositories;
 using Backend.src.app.Features.Users.application.DTOs;
 using Backend.src.app.Features.Users.domain.repositories;
 
@@ -21,27 +20,21 @@ namespace Backend.src.app.Features.Users.application.usecases
         public async Task<IEnumerable<UserResponseDto>> Execute()
         {
             var usuarios = await _userManagementRepository.GetAllAsync();
+            var roles = await _rolRepository.GetAllAsync();
 
-            var lista = new List<UserResponseDto>();
+            var rolesDict = roles.ToDictionary(r => r.IdRol, r => r.NombreRol);
 
-            foreach (var u in usuarios)
+            return usuarios.Select(u => new UserResponseDto
             {
-                var rol = await _rolRepository.GetByIdAsync(u.IdRol);
-
-                lista.Add(new UserResponseDto
-                {
-                    IdUsuario = u.IdUsuario,
-                    Nombre = u.Nombre,
-                    NombreUsuario = u.NombreUsuario,
-                    Telefono = u.Telefono,
-                    Correo = u.Correo,
-                    IdRol = u.IdRol,
-                    Rol = rol?.NombreRol ?? "Sin rol",
-                    Activo = u.Activo
-                });
-            }
-
-            return lista;
+                IdUsuario = u.IdUsuario,
+                Nombre = u.Nombre,
+                NombreUsuario = u.NombreUsuario,
+                Telefono = u.Telefono,
+                Correo = u.Correo,
+                IdRol = u.IdRol,
+                Rol = rolesDict.GetValueOrDefault(u.IdRol, "Sin rol"),
+                Activo = u.Activo
+            });
         }
     }
 }

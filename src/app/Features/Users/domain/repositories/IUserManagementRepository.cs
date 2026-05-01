@@ -10,7 +10,7 @@ namespace Backend.src.app.Features.Users.domain.repositories
         Task<User?> GetByUsernameAsync(string nombreUsuario);
         Task<User?> GetByEmailAsync(string correo);
         Task CreateAsync(User usuario);
-        Task UpdateAsync(User usuario);
+        Task<bool> UpdateAsync(User usuario);
         Task DeleteAsync(User usuario);
     }
 }

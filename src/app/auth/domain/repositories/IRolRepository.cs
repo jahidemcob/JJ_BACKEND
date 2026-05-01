@@ -5,5 +5,6 @@ namespace Backend.src.app.auth.domain.repositories
     public interface IRolRepository
     {
         Task<Rol?> GetByIdAsync(int idRol);
+        Task<IEnumerable<Rol>> GetAllAsync();
     }
 }

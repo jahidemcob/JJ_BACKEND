@@ -8,7 +8,6 @@ namespace Backend.src.app.Features.Users.API.Controllers
 {
     [ApiController]
     [Route("users")]
-    //[Authorize(Roles = "Administrador")]
     public class UsersController : ControllerBase
     {
         private readonly UserListUsecase _userListUsecase;
@@ -71,18 +70,20 @@ namespace Backend.src.app.Features.Users.API.Controllers
             return Ok(updatedUser);
         }
 
-        // PATCH /users/{id}/disable
         [HttpPatch("{id}/disable")]
-        public async Task<IActionResult> DisableUser(int id, [FromBody] UserDisableDto dto)
+        public async Task<IActionResult> DisableUser(int id)
         {
-            dto.IdUsuario = id;
+            var status = await _disableUserUsecase.Execute(id);
 
-            var success = await _disableUserUsecase.Execute(dto);
+            var message = status
+                ? "Usuario activado correctamente"
+                : "Usuario desactivado correctamente";
 
-            if (!success)
-                return NotFound(new { message = "Usuario no encontrado" });
-
-            return Ok(new { message = "Usuario desactivado correctamente" });
+            return Ok(new
+            {
+                message,
+                status
+            });
         }
     }
 }

@@ -1,26 +1,42 @@
+using System;
+using System.Text;
+
+// FRAMEWORK / ASP.NET CORE
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
+// AUTH MODULE
 using Backend.src.app.auth.application.Services;
 using Backend.src.app.auth.application.UseCases;
+using Backend.src.app.auth.domain.entities;
 using Backend.src.app.auth.domain.repositories;
 using Backend.src.app.auth.infrastructure.Context;
 using Backend.src.app.auth.infrastructure.Repositories;
+
+
+// USERS MODULE
+using Backend.src.app.Features.Users.application.usecases;
+using Backend.src.app.Features.Users.application.UseCases;
+using Backend.src.app.Features.Users.domain.Entities;
+using Backend.src.app.Features.Users.domain.repositories;
+using Backend.src.app.Features.Users.infrastructure.Context;
+using Backend.src.app.Features.Users.infrastructure.Repositories;
+
+// SERVICES MODULE
 using Backend.src.app.Features.Services.application.usecases;
 using Backend.src.app.Features.Services.domain.repositories;
 using Backend.src.app.Features.Services.infrastructure.Context;
 using Backend.src.app.Features.Services.infrastructure.repositories;
-using Backend.src.app.Features.Users.application.usecases;
-using Backend.src.app.Features.Users.application.UseCases;
-using Backend.src.app.Features.Users.domain.repositories;
-using Backend.src.app.Features.Users.infrastructure.Context;
-using Backend.src.app.Features.Users.infrastructure.Repositories;
+
+// MOTOBIKES MODULE
+using Backend.src.app.Features.Motobikes.application.usecases;
+using Backend.src.app.Features.Motobikes.domain.repository;
+using Backend.src.app.Features.Motobikes.infrastructure.Context;
+using Backend.src.app.Features.Motobikes.infrastructure.repositories;
+
+// SHARED / SECURITY
 using Backend.src.app.Shared.Security;
-
-using Backend.src.app.auth.domain.entities;
-using Backend.src.app.Features.Users.domain.Entities;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,32 +53,21 @@ builder.Services.AddCors(options =>
 });
 
 // Servicios básicos
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    });
-
+builder.Services.AddControllers().AddJsonOptions(options =>{options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // DB Contexts
-builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
-
-builder.Services.AddDbContext<UsersDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
-
-builder.Services.AddDbContext<ServicesDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
+builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<ServicesDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<MotobikesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
 
 // Repositorios
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
+builder.Services.AddScoped<IMotorbikesRepository, MotorbikesRepository>();
 
 // Servicios
 builder.Services.AddScoped<PasswordService>();
@@ -82,9 +87,17 @@ builder.Services.AddScoped<DisableUserUsecase>();
 // SERVICES
 builder.Services.AddScoped<CreateServiceUseCase>();
 builder.Services.AddScoped<UpdateServiceUseCase>();
-builder.Services.AddScoped<DisableServiceUseCase>();
+builder.Services.AddScoped<UpdateServiceStatusUsecase>();
 builder.Services.AddScoped<GetServiceByIdUseCase>();
 builder.Services.AddScoped<GetAllServicesUseCase>();
+
+// MOTOBIKES
+builder.Services.AddScoped<CreateMotorbikeUsecase>();
+builder.Services.AddScoped<GetAllMotorbikesUsecase>();
+builder.Services.AddScoped<GetByIdMotorbikeUsecase>();
+builder.Services.AddScoped<UpdateMotorbikeUsecase>();
+builder.Services.AddScoped<UpdateStatusMotorbikeUsecase>();
+
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -108,7 +121,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-//  SOLO EN DOCKER 
+//  Docker 
 if (!app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
@@ -125,12 +138,13 @@ if (!app.Environment.IsDevelopment())
                 var authDb = services.GetRequiredService<AuthDbContext>();
                 var usersDb = services.GetRequiredService<UsersDbContext>();
                 var servicesDb = services.GetRequiredService<ServicesDbContext>();
-                var passwordService = services.GetRequiredService<PasswordService>();
+                var motobikesDb = services.GetRequiredService<MotobikesDbContext>(); 
 
                 // Migraciones
                 authDb.Database.Migrate();
                 usersDb.Database.Migrate();
                 servicesDb.Database.Migrate();
+                motobikesDb.Database.Migrate(); // esto tambien
 
                 var PasswordService = services.GetRequiredService<PasswordService>();
 
@@ -148,7 +162,7 @@ if (!app.Environment.IsDevelopment())
 
                 if (!usersDb.Usuarios.Any()) 
                 {
-                    var passwordData = passwordService.HashPassword("Admin123*");
+                    var passwordData = PasswordService.HashPassword("Admin123*");
 
                     var adminRol = authDb.Roles.First(r => r.NombreRol == "Administrador");
 
