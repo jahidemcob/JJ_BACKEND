@@ -1,5 +1,6 @@
 ﻿using Backend.src.app.auth.domain.repositories;
 using Backend.src.app.Features.Users.application.DTOs;
+using Backend.src.app.Features.Users.application.mappers;
 using Backend.src.app.Features.Users.domain.repositories;
 
 public class GetUserByIdUsecase
@@ -18,21 +19,12 @@ public class GetUserByIdUsecase
     public async Task<UserResponseDto?> Execute(int id)
     {
         var usuario = await _userManagementRepository.GetByIdAsync(id);
+
         if (usuario == null)
             return null;
 
         var rol = await _rolRepository.GetByIdAsync(usuario.IdRol);
 
-        return new UserResponseDto
-        {
-            IdUsuario = usuario.IdUsuario,
-            Nombre = usuario.Nombre,
-            NombreUsuario = usuario.NombreUsuario,
-            Telefono = usuario.Telefono,
-            Correo = usuario.Correo,
-            IdRol = usuario.IdRol,
-            Rol = rol?.NombreRol ?? "Sin rol",
-            Activo = usuario.Activo
-        };
+        return UserMapper.ToDto(usuario, rol?.NombreRol ?? "Sin rol");
     }
 }

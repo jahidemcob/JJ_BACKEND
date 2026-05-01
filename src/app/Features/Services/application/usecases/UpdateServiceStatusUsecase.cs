@@ -3,11 +3,11 @@ using Backend.src.app.Features.Services.domain.repositories;
 
 namespace Backend.src.app.Features.Services.application.usecases
 {
-    public class DisableServiceUseCase
+    public class UpdateServiceStatusUsecase
     {
         private readonly IServicesRepository _repository;
 
-        public DisableServiceUseCase(IServicesRepository repository)
+        public UpdateServiceStatusUsecase(IServicesRepository repository)
         {
             _repository = repository;
         }

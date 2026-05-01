@@ -1,5 +1,6 @@
 ﻿using Backend.src.app.Features.Services.application.DTOs;
 using Backend.src.app.Features.Services.application.exceptions;
+using Backend.src.app.Features.Services.application.mappers;
 using Backend.src.app.Features.Services.domain.entities;
 using Backend.src.app.Features.Services.domain.repositories;
 
@@ -14,9 +15,8 @@ namespace Backend.src.app.Features.Services.application.usecases
             _repository = repository;
         }
 
-        public async Task<bool> Execute(ServiceUpdateDto dto)
+        public async Task<ServiceResponseDto> Execute(ServiceUpdateDto dto)
         {
-            // VALIDACIONES BÁSICAS
             if (dto.IdServicio <= 0)
                 throw new ServiceValidationException("El ID del servicio es inválido.");
 
@@ -29,37 +29,29 @@ namespace Backend.src.app.Features.Services.application.usecases
             if (dto.PrecioBase < 0)
                 throw new ServiceValidationException("El precio no puede ser negativo.");
 
-            // VERIFICAR QUE EXISTE
             var existing = await _repository.GetServiceById(dto.IdServicio);
             if (existing == null)
                 throw new ServiceNotFoundException(dto.IdServicio);
 
-            // VALIDAR DUPLICADO 
             var all = await _repository.GetAllServicesAsync();
             if (all.Any(s =>
-                    s.idServicio != dto.IdServicio &&
-                    s.nombreServicio.ToLower() == dto.NombreServicio.ToLower()))
+                s.idServicio != dto.IdServicio &&
+                s.nombreServicio.ToLower() == dto.NombreServicio.ToLower()))
             {
                 throw new ServiceAlreadyExistsException(dto.NombreServicio);
             }
 
-            // MAPEO A ENTIDAD DOMAIN
-            var updatedService = new Service
-            {
-                idServicio = dto.IdServicio,
-                nombreServicio = dto.NombreServicio,
-                descripcion = dto.Descripcion,
-                precioBase = dto.PrecioBase,
-                Activo = existing.Activo // mantener estado
-            };
+            // Actualizar entidad existente
+            existing.nombreServicio = dto.NombreServicio;
+            existing.descripcion = dto.Descripcion;
+            existing.precioBase = dto.PrecioBase;
 
-            // ACTUALIZAR 
-            var success = await _repository.UpdateServiceAsync(updatedService);
+            var success = await _repository.UpdateServiceAsync(existing);
 
             if (!success)
                 throw new Exception("No se pudo actualizar el servicio.");
 
-            return true;
+            return ServiceMapper.ToDto(existing);
         }
     }
 }

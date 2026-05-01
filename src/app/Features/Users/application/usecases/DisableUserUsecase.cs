@@ -12,20 +12,18 @@ namespace Backend.src.app.Features.Users.application.UseCases
             _userManagementRepository = userManagementRepository;
         }
 
-        public async Task<bool> Execute(UserDisableDto dto)
+        public async Task<bool> Execute(int id)
         {
-            // Buscar el usuario
-            var usuario = await _userManagementRepository.GetByIdAsync(dto.IdUsuario);
+            var usuario = await _userManagementRepository.GetByIdAsync(id);
 
             if (usuario == null)
                 return false;
 
-            // USAR EL VALOR QUE VIENE DEL FRONT
-            usuario.Activo = dto.Activo;
+            usuario.Activo = !usuario.Activo;
 
             await _userManagementRepository.UpdateAsync(usuario);
 
-            return true;
+            return usuario.Activo;
         }
     }
 }
