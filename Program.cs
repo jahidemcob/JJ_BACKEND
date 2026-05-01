@@ -19,6 +19,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Backend.src.app.Features.Motobikes.infrastructure.Context;
+using Backend.src.app.Features.Motobikes.application.usecases;
+using Backend.src.app.Features.Motobikes.domain.repository;
+using Backend.src.app.Features.Motobikes.infrastructure.repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,32 +40,21 @@ builder.Services.AddCors(options =>
 });
 
 // Servicios básicos
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    });
-
+builder.Services.AddControllers().AddJsonOptions(options =>{options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // DB Contexts
-builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
-
-builder.Services.AddDbContext<UsersDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
-
-builder.Services.AddDbContext<ServicesDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion"))
-);
+builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<ServicesDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<MotobikesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
 
 // Repositorios
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
+builder.Services.AddScoped<IMotorbikesRepository, MotorbikesRepository>();
 
 // Servicios
 builder.Services.AddScoped<PasswordService>();
@@ -84,6 +77,14 @@ builder.Services.AddScoped<UpdateServiceUseCase>();
 builder.Services.AddScoped<UpdateServiceStatusUsecase>();
 builder.Services.AddScoped<GetServiceByIdUseCase>();
 builder.Services.AddScoped<GetAllServicesUseCase>();
+
+// MOTOBIKES
+builder.Services.AddScoped<CreateMotorbikeUsecase>();
+builder.Services.AddScoped<GetAllMotorbikesUsecase>();
+builder.Services.AddScoped<GetByIdMotorbikeUsecase>();
+builder.Services.AddScoped<UpdateMotorbikeUsecase>();
+builder.Services.AddScoped<UpdateStatusMotorbikeUsecase>();
+
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -124,12 +125,13 @@ if (!app.Environment.IsDevelopment())
                 var authDb = services.GetRequiredService<AuthDbContext>();
                 var usersDb = services.GetRequiredService<UsersDbContext>();
                 var servicesDb = services.GetRequiredService<ServicesDbContext>();
-                var passwordService = services.GetRequiredService<PasswordService>();
+                var motobikesDb = services.GetRequiredService<MotobikesDbContext>(); 
 
                 // Migraciones
                 authDb.Database.Migrate();
                 usersDb.Database.Migrate();
                 servicesDb.Database.Migrate();
+                motobikesDb.Database.Migrate(); // esto tambien
 
                 var PasswordService = services.GetRequiredService<PasswordService>();
 
@@ -147,7 +149,7 @@ if (!app.Environment.IsDevelopment())
 
                 if (!usersDb.Usuarios.Any()) 
                 {
-                    var passwordData = passwordService.HashPassword("Admin123*");
+                    var passwordData = PasswordService.HashPassword("Admin123*");
 
                     var adminRol = authDb.Roles.First(r => r.NombreRol == "Administrador");
 

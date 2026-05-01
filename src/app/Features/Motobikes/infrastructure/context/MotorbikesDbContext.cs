@@ -1,22 +1,17 @@
-﻿using Backend.src.app.Features.Motobikes.domain.entities;
-using Backend.src.app.Features.Users.domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Backend.src.app.Features.Motobikes.domain.entities;
 
 namespace Backend.src.app.Features.Motobikes.infrastructure.Context
 {
-    public class MotorbikesDbContext : DbContext
+    public class MotobikesDbContext : DbContext
     {
-        public MotorbikesDbContext(DbContextOptions<MotorbikesDbContext> options)
+        public MotobikesDbContext(DbContextOptions<MotobikesDbContext> options)
             : base(options) { }
 
-        public DbSet<Motorbike> Motorbikes { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Motorbike> Motos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-            // Tabla Motos
             modelBuilder.Entity<Motorbike>(entity =>
             {
                 entity.ToTable("Motos");
@@ -44,18 +39,12 @@ namespace Backend.src.app.Features.Motobikes.infrastructure.Context
                 entity.Property(m => m.Activo)
                       .HasDefaultValue(true);
 
-                // Relación con usuario  
-                entity.HasOne<User>()
-                      .WithMany()
-                      .HasForeignKey(m => m.idUsuario);
+                // Mantener FK sin dependencias
+                entity.Property(m => m.idUsuario)
+                      .IsRequired();
             });
 
-            // Tabla Usuarios (solo mapping, no la configuras completa aquí)
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("Usuarios");
-                entity.HasKey(u => u.IdUsuario);
-            });
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
