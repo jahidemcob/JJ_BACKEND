@@ -22,11 +22,11 @@ namespace Backend.src.app.Features.Motobikes.application.mappers
         }
 
         // DTO -> Entity
-        public static Motorbike ToEntity(MotorbikeCreateDto dto, string placa)
+        public static Motorbike ToEntity(MotorbikeCreateDto dto, string placa, int userId)
         {
             return new Motorbike
             {
-                idUsuario = dto.IdUsuario,
+                idUsuario = userId,
                 marca = dto.marca,
                 modelo = dto.modelo,
                 placa = placa,

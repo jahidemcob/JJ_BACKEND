@@ -16,11 +16,8 @@ namespace Backend.src.app.Features.Motobikes.application.usecases
             _MotorbikeRepository = motorbikesRepository;
         }
 
-        public async Task<MotorbikeResponseDto> Execute(MotorbikeCreateDto dto)
+        public async Task<MotorbikeResponseDto> Execute(MotorbikeCreateDto dto, int userId)
         {
-            // Validar que el idUsuario sea mayor a 0
-            if (dto.IdUsuario <= 0)
-                throw new MotorbikeValidationException("El IdUsuario no es valido.");
 
             // Validar marca
             if (string.IsNullOrWhiteSpace(dto.marca))
@@ -55,7 +52,7 @@ namespace Backend.src.app.Features.Motobikes.application.usecases
             if (dto.anio < 2010 || dto.anio > currentYear + 1)
                 throw new MotorbikeValidationException("El año de la moto no es válido.");
 
-            var moto = MotorbikeMapper.ToEntity(dto, placa);
+            var moto = MotorbikeMapper.ToEntity(dto, placa, userId);
             var createdMoto = await _MotorbikeRepository.CreateMotorbikeAsync(moto);
 
             return MotorbikeMapper.ToDto(createdMoto);

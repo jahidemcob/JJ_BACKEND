@@ -1,14 +1,17 @@
 ﻿using Backend.src.app.Features.Motobikes.application.DTOs;
 using Backend.src.app.Features.Motobikes.application.exceptions;
 using Backend.src.app.Features.Motobikes.application.usecases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 
 namespace Backend.src.app.Features.Motobikes.API.controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class MotorbikeController : ControllerBase
     {
         private readonly CreateMotorbikeUsecase _createMotorbike;
@@ -36,7 +39,10 @@ namespace Backend.src.app.Features.Motobikes.API.controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _getAllMotorbikes.Execute();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var list = await _getAllMotorbikes.Execute(int.Parse(userId));
+
             return Ok(list);
         }
 
@@ -52,7 +58,9 @@ namespace Backend.src.app.Features.Motobikes.API.controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] MotorbikeCreateDto dto)
         {
-            var moto = await _createMotorbike.Execute(dto);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var moto = await _createMotorbike.Execute(dto, int.Parse(userId));
 
             return CreatedAtAction(
                 nameof(GetById),
