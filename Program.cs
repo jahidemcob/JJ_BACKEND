@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models; 
 
 // AUTH MODULE
 using Backend.src.app.auth.application.Services;
@@ -53,14 +54,50 @@ builder.Services.AddCors(options =>
 });
 
 // Servicios básicos
-builder.Services.AddControllers().AddJsonOptions(options =>{options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;});
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+});
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+
+// SWAGGER CON JWT 
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Ingresa el token así: Bearer {tu_token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 
 // DB Contexts
 builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
 builder.Services.AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
-builder.Services.AddDbContext<ServicesDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<ServicesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
 builder.Services.AddDbContext<MotobikesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
 
 // Repositorios
@@ -138,17 +175,15 @@ if (!app.Environment.IsDevelopment())
                 var authDb = services.GetRequiredService<AuthDbContext>();
                 var usersDb = services.GetRequiredService<UsersDbContext>();
                 var servicesDb = services.GetRequiredService<ServicesDbContext>();
-                var motobikesDb = services.GetRequiredService<MotobikesDbContext>(); 
+                var motobikesDb = services.GetRequiredService<MotobikesDbContext>();
 
-                // Migraciones
                 authDb.Database.Migrate();
                 usersDb.Database.Migrate();
                 servicesDb.Database.Migrate();
-                motobikesDb.Database.Migrate(); // esto tambien
+                motobikesDb.Database.Migrate();
 
                 var PasswordService = services.GetRequiredService<PasswordService>();
 
-              
                 if (!authDb.Roles.Any())
                 {
                     authDb.Roles.AddRange(
@@ -160,7 +195,7 @@ if (!app.Environment.IsDevelopment())
                     authDb.SaveChanges();
                 }
 
-                if (!usersDb.Usuarios.Any()) 
+                if (!usersDb.Usuarios.Any())
                 {
                     var passwordData = PasswordService.HashPassword("Admin123*");
 
@@ -169,7 +204,7 @@ if (!app.Environment.IsDevelopment())
                     usersDb.Usuarios.Add(new User
                     {
                         Nombre = "Administrador",
-                        NombreUsuario = "admin", 
+                        NombreUsuario = "admin",
                         Correo = "admin@demo.com",
                         Telefono = "0000000000",
                         ClaveHash = passwordData.Hash,
