@@ -50,14 +50,14 @@ namespace Backend.src.app.Features.Services.infrastructure.repositories
         }
 
 
-        public async Task<bool> UpdateServiceStatusAsync(int id, bool activo)
+        public async Task<bool> UpdateServiceStatusAsync(int id, bool Activo)
         {
             var service = await _context.Services.FindAsync(id);
 
             if (service == null)
                 return false;
 
-            service.Activo = activo;
+            service.Activo = Activo;
 
             await _context.SaveChangesAsync();
 

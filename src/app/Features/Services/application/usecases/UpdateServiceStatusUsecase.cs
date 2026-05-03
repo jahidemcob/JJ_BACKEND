@@ -30,7 +30,7 @@ namespace Backend.src.app.Features.Services.application.usecases
             var result = await _repository.UpdateServiceStatusAsync(id, newStatus);
 
             if (!result)
-                throw new Exception("No se pudo cambiar el estado del servicio.");
+                throw new ServiceValidationException("No se pudo cambiar el estado del servicio.");
 
             return newStatus;
         }

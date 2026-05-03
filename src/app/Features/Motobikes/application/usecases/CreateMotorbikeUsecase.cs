@@ -10,7 +10,13 @@ namespace Backend.src.app.Features.Motobikes.application.usecases
     public class CreateMotorbikeUsecase
     {
         private readonly IMotorbikesRepository _MotorbikeRepository;
-        
+
+        private static readonly Regex PlacaRegex = new Regex(
+            @"^[A-Z]{3}[0-9]{2}[A-Z]$",
+            RegexOptions.Compiled,
+            TimeSpan.FromMilliseconds(100)
+        );
+
         public CreateMotorbikeUsecase (IMotorbikesRepository motorbikesRepository)
         {
             _MotorbikeRepository = motorbikesRepository;
@@ -35,9 +41,17 @@ namespace Backend.src.app.Features.Motobikes.application.usecases
             var placa = dto.placa.ToUpper().Trim();
 
             // Validar formato de placa
-            var regex = new Regex(@"^[A-Z]{3}[0-9]{2}[A-Z]$");
-            if (!regex.IsMatch(placa))
-                throw new MotorbikeValidationException("La placa no tiene un formato valido. El formato debe ser tres letras mayusculas, seguidas de dos numeros y una letra mayuscula al final (Ejemplo: ABC12D).");
+            try
+            {
+                if (!PlacaRegex.IsMatch(placa))
+                    throw new MotorbikeValidationException(
+                        "La placa no tiene un formato valido. Ej: ABC12D"
+                    );
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                throw new MotorbikeValidationException("Formato de placa invalido.");
+            }
 
             // Validar placa única
             if (await _MotorbikeRepository.ExistsByPlateAsync(placa))

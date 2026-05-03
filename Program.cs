@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 
 // FRAMEWORK / ASP.NET CORE
@@ -14,7 +13,6 @@ using Backend.src.app.auth.domain.entities;
 using Backend.src.app.auth.domain.repositories;
 using Backend.src.app.auth.infrastructure.Context;
 using Backend.src.app.auth.infrastructure.Repositories;
-
 
 // USERS MODULE
 using Backend.src.app.Features.Users.application.usecases;
@@ -36,8 +34,12 @@ using Backend.src.app.Features.Motobikes.domain.repository;
 using Backend.src.app.Features.Motobikes.infrastructure.Context;
 using Backend.src.app.Features.Motobikes.infrastructure.repositories;
 
-// SHARED / SECURITY
+// SHARED
 using Backend.src.app.Shared.Security;
+using Backend.src.app.Shared.Infrastructure;
+using Backend.src.app.Shared.Constants;
+using Backend.src.app.Shared.exceptions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,17 +90,17 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
 
 
 // DB Contexts
-builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
-builder.Services.AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
-builder.Services.AddDbContext<ServicesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
-builder.Services.AddDbContext<MotobikesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConexion")));
+builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
+builder.Services.AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
+builder.Services.AddDbContext<ServicesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
+builder.Services.AddDbContext<MotobikesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
 
 // Repositorios
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
@@ -142,6 +144,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         var config = builder.Configuration;
 
+        var jwtKey = config["Jwt:Key"];
+
+        if (string.IsNullOrEmpty(jwtKey))
+            throw new ConfigurationException("JWT Key no está configurada");
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -151,86 +158,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = config["Jwt:Issuer"],
             ValidAudience = config["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(config["Jwt:Key"])
+                Encoding.UTF8.GetBytes(jwtKey)
             )
         };
     });
 
 var app = builder.Build();
 
-//  Docker 
+// Docker 
 if (!app.Environment.IsDevelopment())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-
-        var retries = 10;
-        var delay = TimeSpan.FromSeconds(5);
-
-        while (retries > 0)
-        {
-            try
-            {
-                var authDb = services.GetRequiredService<AuthDbContext>();
-                var usersDb = services.GetRequiredService<UsersDbContext>();
-                var servicesDb = services.GetRequiredService<ServicesDbContext>();
-                var motobikesDb = services.GetRequiredService<MotobikesDbContext>();
-
-                authDb.Database.Migrate();
-                usersDb.Database.Migrate();
-                servicesDb.Database.Migrate();
-                motobikesDb.Database.Migrate();
-
-                var PasswordService = services.GetRequiredService<PasswordService>();
-
-                if (!authDb.Roles.Any())
-                {
-                    authDb.Roles.AddRange(
-                        new Rol { NombreRol = "Administrador" },
-                        new Rol { NombreRol = "Empleado" },
-                        new Rol { NombreRol = "Cliente" }
-                    );
-
-                    authDb.SaveChanges();
-                }
-
-                if (!usersDb.Usuarios.Any())
-                {
-                    var passwordData = PasswordService.HashPassword("Admin123*");
-
-                    var adminRol = authDb.Roles.First(r => r.NombreRol == "Administrador");
-
-                    usersDb.Usuarios.Add(new User
-                    {
-                        Nombre = "Administrador",
-                        NombreUsuario = "admin",
-                        Correo = "admin@demo.com",
-                        Telefono = "0000000000",
-                        ClaveHash = passwordData.Hash,
-                        ClaveSalt = passwordData.Salt,
-                        IdRol = adminRol.IdRol,
-                        Activo = true
-                    });
-
-                    usersDb.SaveChanges();
-                }
-
-                Console.WriteLine("Migraciones y seed aplicados correctamente ");
-                break;
-            }
-            catch (Exception ex)
-            {
-                retries--;
-                Console.WriteLine($"Error conectando a DB, reintentos restantes: {retries}");
-                Console.WriteLine(ex.Message);
-
-                if (retries == 0) throw;
-
-                Thread.Sleep(delay);
-            }
-        }
-    }
+    using var scope = app.Services.CreateScope();
+    await DbInitializer.InitializeAsync(scope.ServiceProvider);
 }
 
 // Swagger
@@ -248,4 +187,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

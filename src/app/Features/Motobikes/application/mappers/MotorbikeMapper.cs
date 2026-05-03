@@ -3,7 +3,7 @@ using Backend.src.app.Features.Motobikes.application.DTOs;
 
 namespace Backend.src.app.Features.Motobikes.application.mappers
 {
-    public class MotorbikeMapper
+    public static class MotorbikeMapper
     {
         // Entity -> DTO
         public static MotorbikeResponseDto ToDto(Motorbike moto)

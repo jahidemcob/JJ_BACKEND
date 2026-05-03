@@ -3,12 +3,12 @@
     public class UserResponseDto
     {
         public int IdUsuario { get; set; }
-        public string Nombre { get; set; }
-        public string NombreUsuario { get; set; }
-        public string Telefono { get; set; }
-        public string Correo { get; set; }
+        public required string Nombre { get; set; }
+        public required string NombreUsuario { get; set; }
+        public required string Telefono { get; set; }
+        public required string Correo { get; set; }
         public int IdRol { get; set; }
-        public string Rol { get; set; }
+        public required string Rol { get; set; }
         public bool Activo { get; set; }
     }
 }
