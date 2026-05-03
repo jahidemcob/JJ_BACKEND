@@ -35,8 +35,8 @@ namespace Backend.src.app.Features.Services.application.usecases
 
             var all = await _repository.GetAllServicesAsync();
             if (all.Any(s =>
-                s.idServicio != dto.IdServicio &&
-                s.nombreServicio.ToLower() == dto.NombreServicio.ToLower()))
+                    s.idServicio != dto.IdServicio &&
+                    string.Equals(s.nombreServicio, dto.NombreServicio, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new ServiceAlreadyExistsException(dto.NombreServicio);
             }
@@ -49,7 +49,7 @@ namespace Backend.src.app.Features.Services.application.usecases
             var success = await _repository.UpdateServiceAsync(existing);
 
             if (!success)
-                throw new Exception("No se pudo actualizar el servicio.");
+                throw new ServiceNotUpdatedException(dto.IdServicio);
 
             return ServiceMapper.ToDto(existing);
         }

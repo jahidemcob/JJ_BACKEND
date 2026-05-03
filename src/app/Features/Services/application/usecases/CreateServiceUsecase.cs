@@ -29,8 +29,13 @@ namespace Backend.src.app.Features.Services.application.usecases
 
             // VALIDAR DUPLICADOS
             var existentes = await _repository.GetAllServicesAsync();
-            if (existentes.Any(s => s.nombreServicio.ToLower() == dto.NombreServicio.ToLower()))
-                throw new ServiceAlreadyExistsException(dto.NombreServicio);
+            var nombre = dto.NombreServicio;
+
+            if (existentes.Any(s =>
+                string.Equals(s.nombreServicio, nombre, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new ServiceAlreadyExistsException(nombre);
+            }
 
             // CONSTRUIR ENTIDAD
             var service = new Service

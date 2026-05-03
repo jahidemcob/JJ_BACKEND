@@ -7,9 +7,9 @@ namespace Backend.src.app.Features.Services.domain.entities
 
         [Key]
         public int idServicio { get; set; }
-        public string nombreServicio { get; set; }
+        public required string nombreServicio { get; set; }
 
-        public string descripcion { get; set; }
+        public required string descripcion { get; set; }
 
         public decimal precioBase { get; set; }
 

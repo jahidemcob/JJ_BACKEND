@@ -54,7 +54,7 @@ namespace Backend.src.app.Features.Users.infrastructure.Repositories
             correo = correo.Trim().ToLower();
 
             return await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Correo.Trim().ToLower() == correo);
+                .FirstOrDefaultAsync(u => u.Correo == correo);
         }
 
         public async Task CreateAsync(User usuario)

@@ -39,10 +39,12 @@ namespace Backend.src.app.Features.Motobikes.API.controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var list = await _getAllMotorbikes.Execute(int.Parse(userId));
+            if (!int.TryParse(userIdValue, out var userId))
+                return Unauthorized("Usuario no válido");
 
+            var list = await _getAllMotorbikes.Execute(userId);
             return Ok(list);
         }
 
@@ -58,15 +60,13 @@ namespace Backend.src.app.Features.Motobikes.API.controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] MotorbikeCreateDto dto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var moto = await _createMotorbike.Execute(dto, int.Parse(userId));
+            if (!int.TryParse(userIdValue, out var userId))
+                return Unauthorized("Usuario no válido");
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = moto.idMoto },
-                moto
-            );
+            var moto = await _createMotorbike.Execute(dto, userId);
+            return Ok(moto);
         }
 
         // UPDATE

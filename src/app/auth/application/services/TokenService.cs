@@ -19,9 +19,15 @@ namespace Backend.src.app.auth.application.Services
         public string GenerateToken(int userId, string role)
         {
             // Leer configuración
-            var key = _configuration["Jwt:Key"];
-            var issuer = _configuration["Jwt:Issuer"];
-            var audience = _configuration["Jwt:Audience"];
+            var key = _configuration["Jwt:Key"]
+                ?? throw new InvalidOperationException("Jwt:Key no está configurado");
+
+            var issuer = _configuration["Jwt:Issuer"]
+                ?? throw new InvalidOperationException("Jwt:Issuer no está configurado");
+
+            var audience = _configuration["Jwt:Audience"]
+                ?? throw new InvalidOperationException("Jwt:Audience no está configurado");
+
             var expireMinutes = int.Parse(_configuration["Jwt:ExpireMinutes"] ?? "60");
 
             // Convertir la key a bytes

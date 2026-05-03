@@ -3,6 +3,8 @@ using Backend.src.app.Features.Users.application.DTOs;
 using Backend.src.app.Features.Users.application.mappers;
 using Backend.src.app.Features.Users.domain.repositories;
 
+namespace Backend.src.app.Features.Users.application.usecases;
+
 public class GetUserByIdUsecase
 {
     private readonly IUserManagementRepository _userManagementRepository;
