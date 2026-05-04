@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models; 
+using Microsoft.OpenApi.Models;
 
 // AUTH MODULE
 using Backend.src.app.auth.application.Services;
@@ -40,7 +40,6 @@ using Backend.src.app.Shared.Infrastructure;
 using Backend.src.app.Shared.Constants;
 using Backend.src.app.Shared.exceptions;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -62,7 +61,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-
 
 // SWAGGER CON JWT 
 builder.Services.AddSwaggerGen(options =>
@@ -95,12 +93,30 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// DB Contexts con retry
+builder.Services.AddDbContext<AuthDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString(ConnectionStrings.Default),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    ));
 
-// DB Contexts
-builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
-builder.Services.AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
-builder.Services.AddDbContext<ServicesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
-builder.Services.AddDbContext<MotobikesDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionStrings.Default)));
+builder.Services.AddDbContext<UsersDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString(ConnectionStrings.Default),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    ));
+
+builder.Services.AddDbContext<ServicesDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString(ConnectionStrings.Default),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    ));
+
+builder.Services.AddDbContext<MotobikesDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString(ConnectionStrings.Default),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    ));
 
 // Repositorios
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
@@ -137,7 +153,6 @@ builder.Services.AddScoped<GetByIdMotorbikeUsecase>();
 builder.Services.AddScoped<UpdateMotorbikeUsecase>();
 builder.Services.AddScoped<UpdateStatusMotorbikeUsecase>();
 
-
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -165,7 +180,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// Docker 
+// Docker init
 if (!app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
@@ -177,7 +192,11 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // Middleware
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseMiddleware<Backend.src.app.Shared.Middleware.ErrorHandlerMiddleware>();
 
 app.UseCors("AllowAngular");
@@ -186,5 +205,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// HEALTHCHECK
+app.MapGet("/health", async (AuthDbContext db) =>
+{
+    try
+    {
+        await db.Database.CanConnectAsync();
+        return Results.Ok("Healthy");
+    }
+    catch
+    {
+        return Results.Problem("Database not ready");
+    }
+});
 
 await app.RunAsync();
