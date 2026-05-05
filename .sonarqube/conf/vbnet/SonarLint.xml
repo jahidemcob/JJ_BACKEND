@@ -129,17 +129,14 @@
       <Key>S3776</Key>
       <Parameters>
         <Parameter>
-          <Key>threshold</Key>
-          <Value>15</Value>
-        </Parameter>
-        <Parameter>
           <Key>propertyThreshold</Key>
           <Value>3</Value>
         </Parameter>
+        <Parameter>
+          <Key>threshold</Key>
+          <Value>15</Value>
+        </Parameter>
       </Parameters>
-    </Rule>
-    <Rule>
-      <Key>S4201</Key>
     </Rule>
     <Rule>
       <Key>S4507</Key>
@@ -169,7 +166,31 @@
       <Key>S1066</Key>
     </Rule>
     <Rule>
+      <Key>S107</Key>
+      <Parameters>
+        <Parameter>
+          <Key>max</Key>
+          <Value>7</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S1075</Key>
+    </Rule>
+    <Rule>
+      <Key>S108</Key>
+    </Rule>
+    <Rule>
       <Key>S112</Key>
+    </Rule>
+    <Rule>
+      <Key>S114</Key>
+      <Parameters>
+        <Parameter>
+          <Key>format</Key>
+          <Value>^I([A-Z]{1,3}[a-z0-9]+)*([A-Z]{2})?$</Value>
+        </Parameter>
+      </Parameters>
     </Rule>
     <Rule>
       <Key>S1155</Key>
@@ -178,10 +199,40 @@
       <Key>S1163</Key>
     </Rule>
     <Rule>
+      <Key>S117</Key>
+      <Parameters>
+        <Parameter>
+          <Key>format</Key>
+          <Value>^[a-z][a-z0-9]*([A-Z]{1,3}[a-z0-9]+)*([A-Z]{2})?$</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
       <Key>S1172</Key>
     </Rule>
     <Rule>
       <Key>S1186</Key>
+    </Rule>
+    <Rule>
+      <Key>S1192</Key>
+      <Parameters>
+        <Parameter>
+          <Key>threshold</Key>
+          <Value>3</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S1542</Key>
+      <Parameters>
+        <Parameter>
+          <Key>format</Key>
+          <Value>^([A-Z]{1,3}[a-z0-9]+)*([A-Z]{2})?$</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S1643</Key>
     </Rule>
     <Rule>
       <Key>S1654</Key>
@@ -196,7 +247,13 @@
       <Key>S1656</Key>
     </Rule>
     <Rule>
+      <Key>S1751</Key>
+    </Rule>
+    <Rule>
       <Key>S1862</Key>
+    </Rule>
+    <Rule>
+      <Key>S1871</Key>
     </Rule>
     <Rule>
       <Key>S2068</Key>
@@ -206,6 +263,12 @@
           <Value>password, passwd, pwd, passphrase</Value>
         </Parameter>
       </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S2077</Key>
+    </Rule>
+    <Rule>
+      <Key>S2166</Key>
     </Rule>
     <Rule>
       <Key>S2257</Key>
@@ -232,10 +295,16 @@
       <Key>S2376</Key>
     </Rule>
     <Rule>
+      <Key>S2757</Key>
+    </Rule>
+    <Rule>
       <Key>S2925</Key>
     </Rule>
     <Rule>
       <Key>S2951</Key>
+    </Rule>
+    <Rule>
+      <Key>S3011</Key>
     </Rule>
     <Rule>
       <Key>S3363</Key>
@@ -248,6 +317,9 @@
     </Rule>
     <Rule>
       <Key>S3466</Key>
+    </Rule>
+    <Rule>
+      <Key>S3603</Key>
     </Rule>
     <Rule>
       <Key>S3903</Key>
@@ -265,6 +337,12 @@
       <Key>S3927</Key>
     </Rule>
     <Rule>
+      <Key>S4136</Key>
+    </Rule>
+    <Rule>
+      <Key>S4201</Key>
+    </Rule>
+    <Rule>
       <Key>S4210</Key>
     </Rule>
     <Rule>
@@ -275,6 +353,15 @@
     </Rule>
     <Rule>
       <Key>S4545</Key>
+    </Rule>
+    <Rule>
+      <Key>S4581</Key>
+    </Rule>
+    <Rule>
+      <Key>S4583</Key>
+    </Rule>
+    <Rule>
+      <Key>S4586</Key>
     </Rule>
     <Rule>
       <Key>S4663</Key>
@@ -340,82 +427,16 @@
       </Parameters>
     </Rule>
     <Rule>
-      <Key>S107</Key>
-      <Parameters>
-        <Parameter>
-          <Key>max</Key>
-          <Value>7</Value>
-        </Parameter>
-      </Parameters>
-    </Rule>
-    <Rule>
-      <Key>S1075</Key>
-    </Rule>
-    <Rule>
-      <Key>S108</Key>
-    </Rule>
-    <Rule>
-      <Key>S114</Key>
-      <Parameters>
-        <Parameter>
-          <Key>format</Key>
-          <Value>^I([A-Z]{1,3}[a-z0-9]+)*([A-Z]{2})?$</Value>
-        </Parameter>
-      </Parameters>
-    </Rule>
-    <Rule>
-      <Key>S117</Key>
-      <Parameters>
-        <Parameter>
-          <Key>format</Key>
-          <Value>^[a-z][a-z0-9]*([A-Z]{1,3}[a-z0-9]+)*([A-Z]{2})?$</Value>
-        </Parameter>
-      </Parameters>
-    </Rule>
-    <Rule>
-      <Key>S1192</Key>
-      <Parameters>
-        <Parameter>
-          <Key>threshold</Key>
-          <Value>3</Value>
-        </Parameter>
-      </Parameters>
-    </Rule>
-    <Rule>
       <Key>S1313</Key>
-    </Rule>
-    <Rule>
-      <Key>S1542</Key>
-      <Parameters>
-        <Parameter>
-          <Key>format</Key>
-          <Value>^([A-Z]{1,3}[a-z0-9]+)*([A-Z]{2})?$</Value>
-        </Parameter>
-      </Parameters>
-    </Rule>
-    <Rule>
-      <Key>S1643</Key>
     </Rule>
     <Rule>
       <Key>S1645</Key>
     </Rule>
     <Rule>
-      <Key>S1751</Key>
-    </Rule>
-    <Rule>
       <Key>S1764</Key>
     </Rule>
     <Rule>
-      <Key>S1871</Key>
-    </Rule>
-    <Rule>
-      <Key>S2077</Key>
-    </Rule>
-    <Rule>
       <Key>S2094</Key>
-    </Rule>
-    <Rule>
-      <Key>S2166</Key>
     </Rule>
     <Rule>
       <Key>S2178</Key>
@@ -442,19 +463,13 @@
       <Key>S2737</Key>
     </Rule>
     <Rule>
-      <Key>S2757</Key>
-    </Rule>
-    <Rule>
       <Key>S2761</Key>
     </Rule>
     <Rule>
-      <Key>S3011</Key>
+      <Key>S3063</Key>
     </Rule>
     <Rule>
       <Key>S3385</Key>
-    </Rule>
-    <Rule>
-      <Key>S3603</Key>
     </Rule>
     <Rule>
       <Key>S3869</Key>
@@ -478,9 +493,6 @@
       <Key>S4036</Key>
     </Rule>
     <Rule>
-      <Key>S4136</Key>
-    </Rule>
-    <Rule>
       <Key>S4143</Key>
     </Rule>
     <Rule>
@@ -497,15 +509,6 @@
     </Rule>
     <Rule>
       <Key>S4277</Key>
-    </Rule>
-    <Rule>
-      <Key>S4581</Key>
-    </Rule>
-    <Rule>
-      <Key>S4583</Key>
-    </Rule>
-    <Rule>
-      <Key>S4586</Key>
     </Rule>
     <Rule>
       <Key>S4830</Key>
@@ -549,9 +552,6 @@
     </Rule>
     <Rule>
       <Key>S6588</Key>
-    </Rule>
-    <Rule>
-      <Key>S3063</Key>
     </Rule>
   </Rules>
   <Files>

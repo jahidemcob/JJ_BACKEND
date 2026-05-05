@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AnalysisConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
-  <SonarConfigDir>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\conf</SonarConfigDir>
-  <SonarOutputDir>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\out</SonarOutputDir>
-  <SonarBinDir>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\bin</SonarBinDir>
-  <SonarScannerWorkingDirectory>C:\Users\Usuario\Documents\Github\TallerControl\Backend</SonarScannerWorkingDirectory>
-  <JavaExePath>C:\Users\Usuario\.sonar\cache\39c5e23f3ce4d420663afba8ffde28034b72e2b3e240943dc2321bc1f912eef9\OpenJDK21U-jre_x64_windows_hotspot_21.0.9_10.zip_extracted\jdk-21.0.9+10-jre\bin\java.exe</JavaExePath>
-  <EngineJarPath>C:\Users\Usuario\.sonar\cache\39dee3273a4ff432de0b3b588cc75bf40c7c30b03cbe8409728ead765f5f2d9b\sonar-scanner-engine-shaded-26.4.0.121862-all.jar</EngineJarPath>
+  <SonarConfigDir>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\conf</SonarConfigDir>
+  <SonarOutputDir>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\out</SonarOutputDir>
+  <SonarBinDir>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\bin</SonarBinDir>
+  <SonarScannerWorkingDirectory>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend</SonarScannerWorkingDirectory>
+  <JavaExePath>C:\Users\jahid\.sonar\cache\39c5e23f3ce4d420663afba8ffde28034b72e2b3e240943dc2321bc1f912eef9\OpenJDK21U-jre_x64_windows_hotspot_21.0.9_10.zip_extracted\jdk-21.0.9+10-jre\bin\java.exe</JavaExePath>
+  <EngineJarPath>C:\Users\jahid\.sonar\cache\39dee3273a4ff432de0b3b588cc75bf40c7c30b03cbe8409728ead765f5f2d9b\sonar-scanner-engine-shaded-26.4.0.121862-all.jar</EngineJarPath>
   <UseSonarScannerCli>false</UseSonarScannerCli>
   <ScanAllAnalysis>true</ScanAllAnalysis>
   <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
@@ -18,8 +18,8 @@
     <ConfigSetting Id="TfsUri" />
     <ConfigSetting Id="VsCoverageConverterToolPath" />
     <ConfigSetting Id="UnchangedFilesPath" />
-    <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="C:\Users\Usuario\Documents\Github\TallerControl\Backend" />
-    <ConfigSetting Id="settings.file.path" Value="C:\Users\Usuario\.dotnet\tools\.store\dotnet-sonarscanner\11.2.1\dotnet-sonarscanner\11.2.1\tools\netcoreapp3.1\any\SonarQube.Analysis.xml" />
+    <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend" />
+    <ConfigSetting Id="settings.file.path" Value="C:\Users\jahid\.dotnet\tools\.store\dotnet-sonarscanner\11.2.1\dotnet-sonarscanner\11.2.1\tools\netcoreapp3.1\any\SonarQube.Analysis.xml" />
   </AdditionalConfig>
   <ServerSettings>
     <Property Name="sonar.cs.ignoreHeaderComments">true</Property>
@@ -158,8 +158,8 @@
     <Property Name="sonaranalyzer-vbnet.pluginKey">vbnet</Property>
     <Property Name="sonar.java.jvmframeworkconfig.activate">true</Property>
     <Property Name="sonar.updatecenter.url">https://downloads.sonarsource.com/sonarqube/update/update-center.properties</Property>
-    <Property Name="sonar.core.startTime">2/05/2026 7:24:57 p. m.</Property>
-    <Property Name="sonar.core.id">147B411E-AZ3rOV12d7-fcSb6b6MB</Property>
+    <Property Name="sonar.core.startTime">4/05/2026 9:46:24 a. m.</Property>
+    <Property Name="sonar.core.id">147B411E-AZ3zdG0tiuQYjezL8pgW</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.host.url">http://localhost:9000</Property>
@@ -168,40 +168,40 @@
   <AnalyzersSettings>
     <AnalyzerSettings>
       <Language>cs</Language>
-      <RulesetPath>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\conf\Sonar-cs.ruleset</RulesetPath>
-      <DeactivatedRulesetPath>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\conf\Sonar-cs-none.ruleset</DeactivatedRulesetPath>
+      <RulesetPath>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\conf\Sonar-cs.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\conf\Sonar-cs-none.ruleset</DeactivatedRulesetPath>
       <AnalyzerPlugins>
         <AnalyzerPlugin Key="csharp" Version="10.23.0.137933" StaticResourceName="SonarAnalyzer-csharp-10.23.0.137933.zip">
           <AssemblyPaths>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\0\SonarAnalyzer.CSharp.dll</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\0\licenses\LICENSE.txt</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\0\licenses\THIRD_PARTY_LICENSES\Google.Protobuf-LICENSE.txt</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\0\licenses\THIRD_PARTY_LICENSES\Roslyn-LICENSE.txt</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\0\licenses\THIRD_PARTY_LICENSES\StyleCop.Analyzers-LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\0\SonarAnalyzer.CSharp.dll</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\0\licenses\LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\0\licenses\THIRD_PARTY_LICENSES\Google.Protobuf-LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\0\licenses\THIRD_PARTY_LICENSES\Roslyn-LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\0\licenses\THIRD_PARTY_LICENSES\StyleCop.Analyzers-LICENSE.txt</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
       </AnalyzerPlugins>
       <AdditionalFilePaths>
-        <Path>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\conf\cs\SonarLint.xml</Path>
+        <Path>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\conf\cs\SonarLint.xml</Path>
       </AdditionalFilePaths>
     </AnalyzerSettings>
     <AnalyzerSettings>
       <Language>vbnet</Language>
-      <RulesetPath>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\conf\Sonar-vbnet.ruleset</RulesetPath>
-      <DeactivatedRulesetPath>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\conf\Sonar-vbnet-none.ruleset</DeactivatedRulesetPath>
+      <RulesetPath>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\conf\Sonar-vbnet.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\conf\Sonar-vbnet-none.ruleset</DeactivatedRulesetPath>
       <AnalyzerPlugins>
         <AnalyzerPlugin Key="vbnet" Version="10.23.0.137933" StaticResourceName="SonarAnalyzer-vbnet-10.23.0.137933.zip">
           <AssemblyPaths>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\1\SonarAnalyzer.VisualBasic.dll</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\1\licenses\LICENSE.txt</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\1\licenses\THIRD_PARTY_LICENSES\Google.Protobuf-LICENSE.txt</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\1\licenses\THIRD_PARTY_LICENSES\Roslyn-LICENSE.txt</Path>
-            <Path>C:\Users\Usuario\AppData\Local\Temp\.sonarqube\resources\1\licenses\THIRD_PARTY_LICENSES\StyleCop.Analyzers-LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\1\SonarAnalyzer.VisualBasic.dll</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\1\licenses\LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\1\licenses\THIRD_PARTY_LICENSES\Google.Protobuf-LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\1\licenses\THIRD_PARTY_LICENSES\Roslyn-LICENSE.txt</Path>
+            <Path>C:\Users\jahid\AppData\Local\Temp\.sonarqube\resources\1\licenses\THIRD_PARTY_LICENSES\StyleCop.Analyzers-LICENSE.txt</Path>
           </AssemblyPaths>
         </AnalyzerPlugin>
       </AnalyzerPlugins>
       <AdditionalFilePaths>
-        <Path>C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\conf\vbnet\SonarLint.xml</Path>
+        <Path>C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\conf\vbnet\SonarLint.xml</Path>
       </AdditionalFilePaths>
     </AnalyzerSettings>
   </AnalyzersSettings>
