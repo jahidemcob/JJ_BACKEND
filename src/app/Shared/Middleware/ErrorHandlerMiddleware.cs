@@ -2,6 +2,7 @@
 using Backend.src.app.Features.Services.application.exceptions;
 using Backend.src.app.Features.Users.application.Exceptions;
 using Backend.src.app.Features.Motobikes.application.exceptions;
+using Backend.src.app.Integrations.ExternalAPIs.Replacements.Application.Exceptions;
 using Backend.src.app.Shared.exceptions;
 using System.Net;
 using System.Text.Json;
@@ -64,6 +65,10 @@ public class ErrorHandlerMiddleware
             // MOTORBIKES
             MotorbikeValidationException => (StatusCodes.Status400BadRequest, ex.Message),
             MotorbikeNotFoundException => (StatusCodes.Status404NotFound, ex.Message),
+
+            // REPLACEMENTS
+             ExternalServiceException => (StatusCodes.Status503ServiceUnavailable, ex.Message),
+             ReplacementNotFoundException => (StatusCodes.Status404NotFound, ex.Message),
 
             // DEFAULT
             _ => (StatusCodes.Status500InternalServerError, "Error interno del servidor")

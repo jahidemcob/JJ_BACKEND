@@ -40,6 +40,11 @@ using Backend.src.app.Shared.Infrastructure;
 using Backend.src.app.Shared.Constants;
 using Backend.src.app.Shared.exceptions;
 
+// INTEGRATIONS
+using Backend.src.app.Integrations.ExternalAPIs.Replacements.Domain.Interface;
+using Backend.src.app.Integrations.ExternalAPIs.Replacements.Infrastructure.ExternalApiService;
+using Backend.src.app.Integrations.ExternalAPIs.Replacements.Application.Usecases;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -123,6 +128,7 @@ builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>(
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
 builder.Services.AddScoped<IMotorbikesRepository, MotorbikesRepository>();
+builder.Services.AddHttpClient<IReplacementsRepository, ReplacementsApiService>();
 
 // Servicios
 builder.Services.AddScoped<PasswordService>();
@@ -152,6 +158,9 @@ builder.Services.AddScoped<GetAllMotorbikesUsecase>();
 builder.Services.AddScoped<GetByIdMotorbikeUsecase>();
 builder.Services.AddScoped<UpdateMotorbikeUsecase>();
 builder.Services.AddScoped<UpdateStatusMotorbikeUsecase>();
+
+// INTEGRATIONS
+builder.Services.AddScoped<GetAllReplacementsUsecase>();
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
