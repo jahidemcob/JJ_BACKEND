@@ -1,0 +1,6 @@
+@MiBackendRest_HostAddress = http://localhost:5129
+
+GET {{MiBackendRest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
