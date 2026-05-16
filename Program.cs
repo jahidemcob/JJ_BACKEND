@@ -34,6 +34,12 @@ using Backend.src.app.Features.Motobikes.domain.repository;
 using Backend.src.app.Features.Motobikes.infrastructure.Context;
 using Backend.src.app.Features.Motobikes.infrastructure.repositories;
 
+// APPOINTMENTS MODULE
+using Backend.src.app.Features.Appointments.Application.Usecases;
+using Backend.src.app.Features.Appointments.Domain.Interfaces;
+using Backend.src.app.Features.Appointments.Infrastructure.Context;
+using Backend.src.app.Features.Appointments.Infrastructure.Repository;
+
 // SHARED
 using Backend.src.app.Shared.Security;
 using Backend.src.app.Shared.Infrastructure;
@@ -63,6 +69,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()); 
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -122,6 +129,11 @@ builder.Services.AddDbContext<MotobikesDbContext>(options =>
         builder.Configuration.GetConnectionString(ConnectionStrings.Default),
         sqlOptions => sqlOptions.EnableRetryOnFailure()
     ));
+builder.Services.AddDbContext<AppointmentsDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString(ConnectionStrings.Default),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    ));
 
 // Repositorios
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
@@ -129,6 +141,7 @@ builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
 builder.Services.AddScoped<IMotorbikesRepository, MotorbikesRepository>();
 builder.Services.AddHttpClient<IReplacementsRepository, ReplacementsApiService>();
+builder.Services.AddScoped<IAppointmentsRepository, AppointmentsRepository>();
 
 // Servicios
 builder.Services.AddScoped<PasswordService>();
@@ -158,6 +171,16 @@ builder.Services.AddScoped<GetAllMotorbikesUsecase>();
 builder.Services.AddScoped<GetByIdMotorbikeUsecase>();
 builder.Services.AddScoped<UpdateMotorbikeUsecase>();
 builder.Services.AddScoped<UpdateStatusMotorbikeUsecase>();
+
+// APPOINTMENTS
+builder.Services.AddScoped<CreateAppointmentUseCase>();
+builder.Services.AddScoped<GetAllAppointmentsUseCase>();
+builder.Services.AddScoped<GetAppointmentByIdUseCase>();
+builder.Services.AddScoped<GetAppointmentsByStateUseCase>();
+builder.Services.AddScoped<GetAppointmentsByUserIdUseCase>();
+builder.Services.AddScoped<GetAppointmentsByEmployeeIdUseCase>();
+builder.Services.AddScoped<UpdateAppointmentStateUseCase>();
+builder.Services.AddScoped<AssignAppointmentToEmployeeUseCase>();
 
 // INTEGRATIONS
 builder.Services.AddScoped<GetAllReplacementsUsecase>();
