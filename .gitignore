@@ -24,3 +24,14 @@ out/
 
 # -- Archivos temporales del sistema
 Thumbs.db
+
+# SonarQube
+.sonarqube/
+
+# SonarQube cache (extra seguridad)
+.sonarqube-cache/
+
+# Archivos de build de Visual Studio
+*.cache
+*.db
+*.opendb

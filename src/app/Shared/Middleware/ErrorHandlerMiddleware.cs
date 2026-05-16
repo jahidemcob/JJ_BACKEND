@@ -1,4 +1,5 @@
-﻿using Backend.src.app.auth.application.Exceptions;
+﻿using Backend.src.app.Features.Appointments.Application.Exceptions;
+using Backend.src.app.auth.application.Exceptions;
 using Backend.src.app.Features.Services.application.exceptions;
 using Backend.src.app.Features.Users.application.Exceptions;
 using Backend.src.app.Features.Motobikes.application.exceptions;
@@ -69,6 +70,12 @@ public class ErrorHandlerMiddleware
             // REPLACEMENTS
              ExternalServiceException => (StatusCodes.Status503ServiceUnavailable, ex.Message),
              ReplacementNotFoundException => (StatusCodes.Status404NotFound, ex.Message),
+
+            // APPOINTMENTS
+             AppointmentValidationException => (StatusCodes.Status400BadRequest, ex.Message),
+             AppointmentNotFoundException => (StatusCodes.Status404NotFound, ex.Message),
+             InvalidAppointmentStateTransitionException => (StatusCodes.Status409Conflict, ex.Message),
+             InvalidEmployeeAssignmentException => (StatusCodes.Status400BadRequest, ex.Message),
 
             // DEFAULT
             _ => (StatusCodes.Status500InternalServerError, "Error interno del servidor")
