@@ -108,6 +108,7 @@ namespace Backend.src.app.Features.Appointments.Infrastructure.Repository
                 .FirstOrDefaultAsync(a => a.IdPedido == idAppointment);
 
             appointment!.IdEmpleado = idUsuario;
+            appointment!.EstadoCita = AppointmentState.Agendada;
             await _context.SaveChangesAsync();
 
             var nombreCliente = await GetUserNameAsync(appointment.IdUsuario);
