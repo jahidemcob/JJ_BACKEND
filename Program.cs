@@ -40,6 +40,12 @@ using Backend.src.app.Features.Appointments.Domain.Interfaces;
 using Backend.src.app.Features.Appointments.Infrastructure.Context;
 using Backend.src.app.Features.Appointments.Infrastructure.Repository;
 
+// FINANCES MODULE
+using Backend.src.app.Features.Finances.Application.UseCases;
+using Backend.src.app.Features.Finances.Domain.Interfaces;
+using Backend.src.app.Features.Finances.Infrastructure.Context;
+using Backend.src.app.Features.Finances.Infrastructure.Repository;
+
 // SHARED
 using Backend.src.app.Shared.Security;
 using Backend.src.app.Shared.Infrastructure;
@@ -134,6 +140,11 @@ builder.Services.AddDbContext<AppointmentsDbContext>(options =>
         builder.Configuration.GetConnectionString(ConnectionStrings.Default),
         sqlOptions => sqlOptions.EnableRetryOnFailure()
     ));
+builder.Services.AddDbContext<FinancesDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString(ConnectionStrings.Default),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    ));
 
 // Repositorios
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
@@ -142,6 +153,7 @@ builder.Services.AddScoped<IServicesRepository, ServiceRepository>();
 builder.Services.AddScoped<IMotorbikesRepository, MotorbikesRepository>();
 builder.Services.AddHttpClient<IReplacementsRepository, ReplacementsApiService>();
 builder.Services.AddScoped<IAppointmentsRepository, AppointmentsRepository>();
+builder.Services.AddScoped<IFinancesRepository, FinancesRepository>();
 
 // Servicios
 builder.Services.AddScoped<PasswordService>();
@@ -181,6 +193,12 @@ builder.Services.AddScoped<GetAppointmentsByUserIdUseCase>();
 builder.Services.AddScoped<GetAppointmentsByEmployeeIdUseCase>();
 builder.Services.AddScoped<UpdateAppointmentStateUseCase>();
 builder.Services.AddScoped<AssignAppointmentToEmployeeUseCase>();
+
+// FINANCES
+builder.Services.AddScoped<CreateMovementUseCase>();
+builder.Services.AddScoped<GetAllMovementsUseCase>();
+builder.Services.AddScoped<GetMovementByIdUseCase>();
+builder.Services.AddScoped<GetMovementsByTypeUseCase>();
 
 // INTEGRATIONS
 builder.Services.AddScoped<GetAllReplacementsUsecase>();
