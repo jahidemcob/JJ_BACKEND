@@ -23,7 +23,7 @@ namespace Backend.src.app.Features.Finances.Application.Mappers
         {
             return new AccountingMovement
             {
-                Fecha = DateTime.UtcNow,
+                Fecha = DateTime.Now,
                 TipoMovimiento = dto.TipoMovimiento,
                 Descripcion = dto.Descripcion,
                 Monto = dto.Monto
