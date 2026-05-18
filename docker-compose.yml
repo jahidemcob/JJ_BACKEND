@@ -13,11 +13,11 @@ services:
     volumes:
       - sql_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/1433' || exit 1"]
+      test: ["CMD-SHELL", "cat /proc/net/tcp | grep -q '00000000:0599' || exit 1"]
       interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
+      timeout: 10s
+      retries: 15
+      start_period: 90s
     networks:
       - app_network
 
@@ -32,10 +32,10 @@ services:
         condition: service_healthy
     environment:
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConexion=Server=sqlserver;Database=TallerControlBD;User=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
-      - Jwt__Key=F2@kP9!dT3^zB7#qM5%wV8&xR1*eY4$hJ6@uL0!sC9^tN3#pG2%rQ7&vD5*uA8$zW4
-      - Jwt__Issuer=MiApp
-      - Jwt__Audience=MiAppUsuarios
+      - ConnectionStrings__DefaultConexion=Server=sqlserver;Database=TallerControlBD;User=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;Encrypt=False      
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 10s
@@ -62,7 +62,7 @@ services:
       - app_network
 
   sonarqube:
-    image: sonarqube:latest
+    image: sonarqube:10-community
     container_name: sonarqube
     restart: unless-stopped
     ports:

@@ -35,3 +35,8 @@ Thumbs.db
 *.cache
 *.db
 *.opendb
+
+# Variables de entorno (contraseñas, claves JWT)
+.env
+.env.*
+!.env.example
