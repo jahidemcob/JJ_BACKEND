@@ -13,7 +13,8 @@ services:
     volumes:
       - sql_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "cat /proc/net/tcp | grep -q '00000000:0599' || exit 1"]
+      test:
+        ["CMD-SHELL", "cat /proc/net/tcp | grep -q '00000000:0599' || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 15
@@ -32,7 +33,7 @@ services:
         condition: service_healthy
     environment:
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConexion=Server=sqlserver;Database=TallerControlBD;User=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;Encrypt=False      
+      - ConnectionStrings__DefaultConexion=Server=sqlserver;Database=TallerControlBD;User=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;Encrypt=False
       - Jwt__Key=${JWT_KEY}
       - Jwt__Issuer=${JWT_ISSUER}
       - Jwt__Audience=${JWT_AUDIENCE}
@@ -62,7 +63,7 @@ services:
       - app_network
 
   sonarqube:
-    image: sonarqube:10-community
+    image: sonarqube:community
     container_name: sonarqube
     restart: unless-stopped
     ports:
