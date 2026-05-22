@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend.src.app.Integrations.ExternalAPIs.Replacements.API.Controllers
 {
     [ApiController]
-    [Route("api/Respuestos")]
+    [Route("api/Replacements")]
     public class ReplacementsController : ControllerBase
     {
         private readonly GetAllReplacementsUsecase _getAllReplacementsUsecase;

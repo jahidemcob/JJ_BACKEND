@@ -1,4 +1,5 @@
 using System.Text;
+using Serilog;
 
 // FRAMEWORK / ASP.NET CORE
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -57,7 +58,28 @@ using Backend.src.app.Integrations.ExternalAPIs.Replacements.Domain.Interface;
 using Backend.src.app.Integrations.ExternalAPIs.Replacements.Infrastructure.ExternalApiService;
 using Backend.src.app.Integrations.ExternalAPIs.Replacements.Application.Usecases;
 
+
+//Logs 
+
+var logPath = Path.Combine(Directory.GetCurrentDirectory(), "logs", "log-.log");
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", Serilog.Events.LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: logPath,  
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+    )
+    .CreateLogger();
+
+Log.Information(">>> Serilog iniciado correctamente");
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 builder.Services.AddCors(options =>
 {
@@ -241,11 +263,15 @@ if (!app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
+
 // Middleware
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseMiddleware<Backend.src.app.Shared.Middleware.ErrorHandlerMiddleware>();
 

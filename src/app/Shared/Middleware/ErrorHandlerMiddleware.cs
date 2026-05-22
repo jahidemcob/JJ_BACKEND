@@ -32,7 +32,6 @@ public class ErrorHandlerMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception occurred");
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -85,6 +84,11 @@ public class ErrorHandlerMiddleware
             // DEFAULT
             _ => (StatusCodes.Status500InternalServerError, "Error interno del servidor")
         };
+
+        if (statusCode == StatusCodes.Status500InternalServerError)
+            _logger.LogError(ex, "Error interno: {Message}", ex.Message);
+        else
+            _logger.LogWarning("Error controlado [{Status}]: {Message}", statusCode, ex.Message);
 
         context.Response.StatusCode = statusCode;
 

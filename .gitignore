@@ -12,9 +12,6 @@ obj/
 # -- Archivos generados automáticamente por VSCode
 .vscode/
 
-# -- Archivos de logs locales
-*.log
-
 # -- Archivos de publicación
 publish/
 out/
@@ -40,3 +37,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+#logs 
+logs/
+*.log
