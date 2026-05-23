@@ -11,16 +11,13 @@ namespace Backend.src.app.Features.Users.application.usecases
     {
         private readonly IUserManagementRepository _userManagementRepository;
         private readonly IRolRepository _rolRepository;
-        private readonly PasswordService _passwordService;
 
         public UpdateUserUsecase(
             IUserManagementRepository userManagementRepository,
-            IRolRepository rolRepository,
-            PasswordService passwordService)
+            IRolRepository rolRepository)
         {
             _userManagementRepository = userManagementRepository;
             _rolRepository = rolRepository;
-            _passwordService = passwordService;
         }
 
         public async Task<UserResponseDto> Execute(UserUpdateDto request)
@@ -57,7 +54,7 @@ namespace Backend.src.app.Features.Users.application.usecases
             // 6. Password opcional
             if (!string.IsNullOrEmpty(request.NuevaClave))
             {
-                var (hash, salt) = _passwordService.HashPassword(request.NuevaClave);
+                var (hash, salt) = PasswordService.HashPassword(request.NuevaClave);
                 usuario.ClaveHash = hash;
                 usuario.ClaveSalt = salt;
             }

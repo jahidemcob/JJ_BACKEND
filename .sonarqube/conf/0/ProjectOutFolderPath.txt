@@ -1,1 +1,1 @@
-C:\Users\jahid\OneDrive\Desktop\TallerControl\Mibackend\.sonarqube\out\0
+C:\Users\Usuario\Documents\Github\TallerControl\Backend\.sonarqube\out\0

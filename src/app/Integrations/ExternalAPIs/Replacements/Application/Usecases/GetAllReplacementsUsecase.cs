@@ -18,7 +18,7 @@ namespace Backend.src.app.Integrations.ExternalAPIs.Replacements.Application.Use
         {
             var replacements = await _replacementRepository.GetAllReplacementsAsync();
 
-            if (!replacements.Any())
+            if (replacements.Count == 0)
                 throw new ReplacementNotFoundException("No se encontraron repuestos.");
 
             return ReplacementMapper.ToDtoList(replacements);

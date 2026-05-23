@@ -62,10 +62,9 @@ public static class DbInitializer
     {
         var authDb = services.GetRequiredService<AuthDbContext>();
         var usersDb = services.GetRequiredService<UsersDbContext>();
-        var passwordService = services.GetRequiredService<PasswordService>();
 
         await SeedRolesAsync(authDb);
-        await SeedAdminUserAsync(authDb, usersDb, passwordService);
+        await SeedAdminUserAsync(authDb, usersDb);
     }
 
     private static async Task SeedRolesAsync(AuthDbContext authDb)
@@ -83,12 +82,11 @@ public static class DbInitializer
 
     private static async Task SeedAdminUserAsync(
         AuthDbContext authDb,
-        UsersDbContext usersDb,
-        PasswordService passwordService)
+        UsersDbContext usersDb)
     {
         if (await usersDb.Usuarios.AnyAsync()) return;
 
-        var passwordData = passwordService.HashPassword("Admin123*");
+        var passwordData = PasswordService.HashPassword("Admin123*");
 
         var adminRol = await authDb.Roles
             .FirstAsync(r => r.NombreRol == "Administrador");

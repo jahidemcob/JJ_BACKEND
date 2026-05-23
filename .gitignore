@@ -41,3 +41,12 @@ Thumbs.db
 #logs 
 logs/
 *.log
+
+# Proyecto de tests (carpeta dentro de Backend)
+Backend.Tests/
+
+# Sonar
+.sonarqube/
+
+# Cobertura
+coverage/

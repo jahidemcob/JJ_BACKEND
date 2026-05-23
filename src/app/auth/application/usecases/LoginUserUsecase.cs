@@ -11,18 +11,17 @@ namespace Backend.src.app.auth.application.UseCases
     {
         private readonly IUserManagementRepository _userRepo;
         private readonly IRolRepository _rolRepo;
-        private readonly PasswordService _passwordService;
+        
         private readonly TokenService _tokenService;
 
         public LoginUserUseCase(
             IUserManagementRepository userRepo,
             IRolRepository rolRepo,
-            PasswordService passwordService,
             TokenService tokenService)
         {
             _userRepo = userRepo;
             _rolRepo = rolRepo;
-            _passwordService = passwordService;
+     
             _tokenService = tokenService;
         }
 
@@ -34,7 +33,7 @@ namespace Backend.src.app.auth.application.UseCases
                 throw new InvalidCredentialsException();
 
             // 2. Validar contraseña
-            if (!_passwordService.VerifyPassword(
+            if (!PasswordService.VerifyPassword(
                 request.Clave,
                 usuario.ClaveHash,
                 usuario.ClaveSalt))

@@ -178,7 +178,6 @@ builder.Services.AddScoped<IAppointmentsRepository, AppointmentsRepository>();
 builder.Services.AddScoped<IFinancesRepository, FinancesRepository>();
 
 // Servicios
-builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<TokenService>();
 
 // AUTH

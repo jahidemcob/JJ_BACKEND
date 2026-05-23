@@ -48,7 +48,7 @@ namespace Backend.src.app.Features.Motobikes.infrastructure.repositories
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (!motos.Any())
+            if (motos.Count == 0)
                 return Enumerable.Empty<(Motorbike, string)>();
 
             var idsUsuarios = motos.Select(m => m.idUsuario).Distinct().ToList();

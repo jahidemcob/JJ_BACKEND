@@ -9,15 +9,13 @@ namespace Backend.src.app.auth.application.UseCases
 {
     public class RegisterUserUseCase
     {
-        private readonly IUserManagementRepository _userRepo;
-        private readonly PasswordService _passwordService;
+        private readonly IUserManagementRepository _userRepo;   
 
         public RegisterUserUseCase(
-            IUserManagementRepository userRepo,
-            PasswordService passwordService)
+            IUserManagementRepository userRepo)
         {
             _userRepo = userRepo;
-            _passwordService = passwordService;
+            
         }
 
         public async Task<User> RegisterAsync(RegisterRequestDto request)
@@ -33,7 +31,7 @@ namespace Backend.src.app.auth.application.UseCases
                 throw new UserOrEmailAlreadyUsedException();
 
             // 2. Crear Hash + Salt
-            _passwordService.CreatePasswordHash(
+            PasswordService.CreatePasswordHash(
                 request.Clave, out byte[] hash, out byte[] salt);
 
             // 3. Crear la entidad usuario

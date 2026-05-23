@@ -11,16 +11,13 @@ namespace Backend.src.app.Features.Users.application.UseCases
     public class CreateUserUsecase
     {
         private readonly IUserManagementRepository _repo;
-        private readonly PasswordService _passwordService;
         private readonly IRolRepository _rolRepository;
 
         public CreateUserUsecase(
             IUserManagementRepository repo,
-            IRolRepository rolRepository,
-            PasswordService passwordService)
+            IRolRepository rolRepository)
         {
             _repo = repo;
-            _passwordService = passwordService;
             _rolRepository = rolRepository;
         }
 
@@ -36,7 +33,7 @@ namespace Backend.src.app.Features.Users.application.UseCases
                 throw new EmailUsedException();
 
             // Hash password
-            _passwordService.CreatePasswordHash(
+            PasswordService.CreatePasswordHash(
                 dto.Clave,
                 out var hash,
                 out var salt

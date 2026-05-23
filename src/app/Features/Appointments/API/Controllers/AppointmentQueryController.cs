@@ -1,5 +1,4 @@
-﻿using Backend.src.app.Features.Appointments.Application.DTOs;
-using Backend.src.app.Features.Appointments.Application.Usecases;
+﻿using Backend.src.app.Features.Appointments.Application.Usecases;
 using Backend.src.app.Features.Appointments.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,42 +7,30 @@ using System.Security.Claims;
 namespace Backend.src.app.Features.Appointments.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/appointment")]
     [Authorize]
-    public class AppointmentController : ControllerBase
+    public class AppointmentQueryController : ControllerBase
     {
-        private readonly CreateAppointmentUseCase _createAppointment;
         private readonly GetAllAppointmentsUseCase _getAllAppointments;
         private readonly GetAppointmentByIdUseCase _getAppointmentById;
         private readonly GetAppointmentsByStateUseCase _getAppointmentsByState;
         private readonly GetAppointmentsByUserIdUseCase _getAppointmentsByUserId;
         private readonly GetAppointmentsByEmployeeIdUseCase _getAppointmentsByEmployeeId;
-        private readonly UpdateAppointmentStateUseCase _updateAppointmentState;
-        private readonly AssignAppointmentToEmployeeUseCase _assignAppointmentToEmployee;
 
-        public AppointmentController(
-            CreateAppointmentUseCase createAppointment,
+        public AppointmentQueryController(
             GetAllAppointmentsUseCase getAllAppointments,
             GetAppointmentByIdUseCase getAppointmentById,
             GetAppointmentsByStateUseCase getAppointmentsByState,
             GetAppointmentsByUserIdUseCase getAppointmentsByUserId,
-            GetAppointmentsByEmployeeIdUseCase getAppointmentsByEmployeeId,
-            UpdateAppointmentStateUseCase updateAppointmentState,
-            AssignAppointmentToEmployeeUseCase assignAppointmentToEmployee)
+            GetAppointmentsByEmployeeIdUseCase getAppointmentsByEmployeeId)
         {
-            _createAppointment = createAppointment;
             _getAllAppointments = getAllAppointments;
             _getAppointmentById = getAppointmentById;
             _getAppointmentsByState = getAppointmentsByState;
             _getAppointmentsByUserId = getAppointmentsByUserId;
             _getAppointmentsByEmployeeId = getAppointmentsByEmployeeId;
-            _updateAppointmentState = updateAppointmentState;
-            _assignAppointmentToEmployee = assignAppointmentToEmployee;
         }
 
-        // ─── Admin ───
-
-        // GET ALL
         [HttpGet]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> GetAll()
@@ -52,7 +39,6 @@ namespace Backend.src.app.Features.Appointments.API.Controllers
             return Ok(list);
         }
 
-        // GET BY STATE
         [HttpGet("state/{state}")]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> GetByState(AppointmentState state)
@@ -61,27 +47,6 @@ namespace Backend.src.app.Features.Appointments.API.Controllers
             return Ok(list);
         }
 
-        // ASSIGN EMPLOYEE
-        [HttpPatch("{id:int}/assign")]
-        [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> AssignEmployee(int id, [FromBody] AssignEmployeeDto dto)
-        {
-            var result = await _assignAppointmentToEmployee.Execute(id, dto);
-            return Ok(result);
-        }
-
-        // ─── Admin + Empleado ───
-
-        // UPDATE STATE
-        [HttpPatch("{id:int}/state")]
-        [Authorize(Roles = "Administrador,Empleado")]
-        public async Task<IActionResult> UpdateState(int id, [FromBody] UpdateAppointmentStateDto dto)
-        {
-            var result = await _updateAppointmentState.Execute(id, dto);
-            return Ok(result);
-        }
-
-        // GET BY EMPLOYEE
         [HttpGet("employee")]
         [Authorize(Roles = "Administrador,Empleado")]
         public async Task<IActionResult> GetByEmployee()
@@ -94,9 +59,6 @@ namespace Backend.src.app.Features.Appointments.API.Controllers
             return Ok(list);
         }
 
-        // ─── Admin + Cliente ───
-
-        // GET BY ID
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -104,7 +66,6 @@ namespace Backend.src.app.Features.Appointments.API.Controllers
             return Ok(result);
         }
 
-        // GET BY USER
         [HttpGet("user")]
         [Authorize(Roles = "Administrador,Cliente")]
         public async Task<IActionResult> GetByUser()
@@ -115,22 +76,6 @@ namespace Backend.src.app.Features.Appointments.API.Controllers
 
             var list = await _getAppointmentsByUserId.Execute(userId);
             return Ok(list);
-        }
-
-        // ─── Cliente ───
-
-        // CREATE
-        [HttpPost]
-        [Authorize(Roles = "Cliente")]
-        public async Task<IActionResult> Create([FromBody] CreateAppointmentDto dto)
-        {
-            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!int.TryParse(userIdValue, out var userId))
-                return Unauthorized("Usuario no válido");
-
-            dto.IdUsuario = userId;
-            var result = await _createAppointment.Execute(dto);
-            return Ok(result);
         }
     }
 }
