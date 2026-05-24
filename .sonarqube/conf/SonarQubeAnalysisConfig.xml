@@ -158,12 +158,14 @@
     <Property Name="sonaranalyzer-vbnet.pluginKey">vbnet</Property>
     <Property Name="sonar.java.jvmframeworkconfig.activate">true</Property>
     <Property Name="sonar.updatecenter.url">https://downloads.sonarsource.com/sonarqube/update/update-center.properties</Property>
-    <Property Name="sonar.core.startTime">23/05/2026 11:26:45 a. m.</Property>
     <Property Name="sonar.core.id">147B411E-AZ5VqRnnrsDBYSdXOQXu</Property>
+    <Property Name="sonar.core.startTime">23/05/2026 6:15:09 p. m.</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.host.url">http://localhost:9000</Property>
-    <Property Name="sonar.cs.cobertura.reportsPaths">C:\Users\Usuario\Documents\Github\TallerControl\Backend\coverage\**\coverage.cobertura.xml</Property>
+    <Property Name="sonar.cs.opencover.reportsPaths">C:\Users\Usuario\Documents\Github\TallerControl\Backend.Tests\TestResults\**\coverage.opencover.xml</Property>
+    <Property Name="sonar.coverage.exclusions">**/Migrations/**,**/Infrastructure/Context/**,**/infrastructure/Context/**,**/infrastructure/context/**,**/Infrastructure/Repos**,**/infrastructure/reposito**,**/infrastructure/Repositories/**,**/Shared/Infrastructure/**,**/Integrations/**/Infrastructure/**,Program.cs</Property>
+    <Property Name="sonar.exclusions">**/Migrations/**,**/Infrastructure/Context/**,**/infrastructure/Context/**,**/infrastructure/context/**,**/Infrastructure/Repos**,**/infrastructure/reposito**,**/infrastructure/Repositories/**,**/Shared/Infrastructure/**,**/Integrations/**/Infrastructure/**,Program.cs,C:\Users\Usuario\Documents\Github\TallerControl\Backend.Tests\TestResults\**\coverage.opencover.xml</Property>
   </LocalSettings>
   <ScannerOptsSettings />
   <AnalyzersSettings>

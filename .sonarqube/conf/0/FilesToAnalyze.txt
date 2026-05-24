@@ -170,6 +170,7 @@ C:\Users\Usuario\Documents\Github\TallerControl\Backend\coverage\03d8d661-cdab-4
 C:\Users\Usuario\Documents\Github\TallerControl\Backend\coverage\081077f5-7096-4a62-8e37-9d9a6dc45ca3\coverage.cobertura.xml
 C:\Users\Usuario\Documents\Github\TallerControl\Backend\coverage\1e1eedf1-b31d-4890-8a5a-c37a1015893a\coverage.cobertura.xml
 C:\Users\Usuario\Documents\Github\TallerControl\Backend\coverage\819d7741-35e5-40ac-8856-1579ae153f22\coverage.cobertura.xml
+C:\Users\Usuario\Documents\Github\TallerControl\Backend\coverage\bd34f186-c161-4c8e-9bec-a8d40cc71c2f\coverage.cobertura.xml
 C:\Users\Usuario\Documents\Github\TallerControl\Backend\docker-compose.yml
 C:\Users\Usuario\Documents\Github\TallerControl\Backend\Dockerfile
 C:\Users\Usuario\Documents\Github\TallerControl\Backend\logs\log-20260522.log

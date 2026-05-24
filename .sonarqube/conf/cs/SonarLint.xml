@@ -2,8 +2,8 @@
 <AnalysisInput>
   <Settings>
     <Setting>
-      <Key>sonar.cs.cobertura.reportsPaths</Key>
-      <Value>C:\Users\Usuario\Documents\Github\TallerControl\Backend\coverage\**\coverage.cobertura.xml</Value>
+      <Key>sonar.cs.opencover.reportsPaths</Key>
+      <Value>C:\Users\Usuario\Documents\Github\TallerControl\Backend.Tests\TestResults\**\coverage.opencover.xml</Value>
     </Setting>
     <Setting>
       <Key>sonar.cs.ignoreHeaderComments</Key>
