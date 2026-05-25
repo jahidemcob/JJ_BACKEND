@@ -183,6 +183,8 @@ builder.Services.AddScoped<TokenService>();
 // AUTH
 builder.Services.AddScoped<LoginUserUseCase>();
 builder.Services.AddScoped<RegisterUserUseCase>();
+builder.Services.AddScoped<GoogleLoginUseCase>();
+builder.Services.AddScoped<CompleteProfileUseCase>();
 
 // USERS
 builder.Services.AddScoped<UserListUsecase>();

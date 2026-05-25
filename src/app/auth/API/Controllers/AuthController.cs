@@ -11,11 +11,19 @@ namespace Auth.API.Controllers
     {
         private readonly LoginUserUseCase _loginUserUseCase;
         private readonly RegisterUserUseCase _registerUserUseCase;
+        private readonly GoogleLoginUseCase _googleLoginUseCase;
+        private readonly CompleteProfileUseCase _completeProfileUseCase;
 
-        public AuthController(LoginUserUseCase loginUserUseCase, RegisterUserUseCase registerUserUseCase)
+        public AuthController(
+            LoginUserUseCase loginUserUseCase,
+            RegisterUserUseCase registerUserUseCase,
+            GoogleLoginUseCase googleLoginUseCase,
+            CompleteProfileUseCase completeProfileUseCase)
         {
             _loginUserUseCase = loginUserUseCase;
             _registerUserUseCase = registerUserUseCase;
+            _googleLoginUseCase = googleLoginUseCase;
+            _completeProfileUseCase = completeProfileUseCase;
         }
 
         [HttpPost("login")]
@@ -32,6 +40,22 @@ namespace Auth.API.Controllers
         {
             await _registerUserUseCase.RegisterAsync(request);
             return Ok(new { message = "Usuario registrado correctamente" });
+        }
+
+        [HttpPost("google")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleAuthRequestDto request)
+        {
+            var result = await _googleLoginUseCase.ExecuteAsync(request.IdToken);
+            return Ok(result);
+        }
+
+        [HttpPatch("complete-profile")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CompleteProfile([FromBody] CompleteProfileRequestDto request)
+        {
+            await _completeProfileUseCase.ExecuteAsync(request);
+            return Ok(new { message = "Perfil completado correctamente" });
         }
     }
 }
