@@ -77,7 +77,8 @@ namespace Backend.src.app.auth.application.UseCases
                 Token = token,
                 Nombre = usuario.Nombre,
                 Rol = rolNombre,
-                PerfilCompleto = !esNuevo
+                PerfilCompleto = !esNuevo,
+                CuentaExistente = !esNuevo
             };
         }
     }

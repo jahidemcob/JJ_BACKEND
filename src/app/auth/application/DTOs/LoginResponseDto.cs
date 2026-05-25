@@ -7,5 +7,6 @@
         public string Rol { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
         public bool PerfilCompleto { get; set; } = true;
+        public bool CuentaExistente { get; set; } = false;
     }
 }
